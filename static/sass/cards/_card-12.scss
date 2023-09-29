@@ -1,0 +1,213 @@
+@mixin card-12-base() {
+    @include card-name("C12 mobile");
+
+    .c-cards-view {
+        @include flex-direction(column, vertical);
+
+
+        border-bottom: 1px solid $grey-7;
+
+        &__media {
+            height:40vw;
+            min-height:145px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding:5px;
+
+            img {
+                display: block;
+                object-fit: cover;
+            }
+        }
+
+        &__category {
+            display: none;
+        }
+
+
+        &__heading {
+            @include font-size(16);
+            @include flex-height(45px);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: $weightBold;
+            line-height: 1.18;
+            color: $black;
+        }
+
+        &__description {
+            display: none;
+        }
+
+        &__author {
+            display: none;
+        }
+    }
+}
+
+.card-12-mobile-sm {
+    @media #{$mobile-sm} {
+        @include card-12-base();
+        .c-cards-view {
+            padding: 19px 10px 0 10px;
+
+            @include flex-height(281px);
+
+            &__media {
+                height:181px;
+                padding:2px;
+            }
+
+            &__container {
+            }
+    
+            
+            &__heading {
+                @include font-size(14);
+                line-height: 1.14;
+                @include flex-height(56px);
+                margin-top:12px;
+                margin-bottom:0;
+            }
+        }
+    }
+}
+
+
+.card-12-mobile-lg {
+    @media #{$mobile-lg} {
+        @include card-12-base();
+        .c-cards-view {
+            padding: 19px 10px 0 10px;
+
+            @include flex-height(350px);
+
+            &__media {
+                height:271px;
+                padding:2px;
+            }
+
+            &__container {
+            }
+    
+            
+            &__heading {
+                @include font-size(14);
+                line-height: 1.14;
+                @include flex-height(56px);
+                margin-top:12px;
+                margin-bottom:0;
+            }
+        }
+    }
+}
+
+
+@mixin card-12-tablet-base() {
+    @include card-12-base();
+
+    @include card-name("C12 tablet");
+    .c-cards-view {
+
+        @include flex-height(412px);
+
+        &__media {
+            height: 236px;
+            width: 100%;
+            background: $white none repeat scroll 0 0;
+        }
+        &__container {
+            width: 100%;
+            margin-left: 0;
+        }
+
+        &__heading{
+            @include font-size(14);
+            @include flex-height(65px);
+            line-height: 1.43;
+            margin-top: 5px;
+        }
+    }
+}
+
+
+
+
+
+.card-12-tablet {
+    @media #{$tablet} {
+        @include card-12-tablet-base();
+        .c-cards-view{
+            @include flex-height(345px);
+            padding: 25px 20px 0 20px;
+
+
+            &__media {
+                height:231px;
+            }
+            &__heading{
+                @include flex-height(65px);
+            }
+
+
+
+        }
+    }
+}
+
+.card-12-desktop {
+	@media #{$desktop} {
+        @include card-12-tablet-base();
+        @include card-name("C12 desktop");
+
+        .c-cards-view{
+            @include flex-height(445px);
+            padding: 30px 15px 0 15px;
+
+            &__media {
+                height:325px;
+                background: $white none repeat scroll 0 0;
+            }
+            &__heading{
+                @include font-size(16);
+                line-height: 1.25;
+                @include flex-height(65px);
+                margin: 5px 0 0 0;
+
+            }
+    
+            &__container {
+                // padding: 30px 40px;
+            }
+        }
+    }
+}
+
+.card-12-desktop-lg {
+	@media #{$desktop-lg} {
+        @include card-12-tablet-base();
+        @include card-name("C12 desktop");
+
+        .c-cards-view{
+            @include flex-height(445px);
+            padding: 30px 40px 0 40px;
+
+            &__media {
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                padding:5px;
+                height:325px;
+                background: $white none repeat scroll 0 0;
+            }
+            &__heading{
+                @include font-size(16);
+                line-height: 1.25;
+                @include flex-height(65px);
+                margin: 5px 0 0 0;
+
+            }
+    
+            &__container {
+                // padding: 30px 40px;
+            }
+        }
+    }
+}

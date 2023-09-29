@@ -1,0 +1,134 @@
+{% set articleCount = 0 %}
+{% set cardIndex = 0 %}
+
+{% set labelInfo = cusLabel ? 'hide_labels' : '' %}
+{% set noAuthor = authorHide ? 'hide_author' : '' %}
+
+<div class="row" data-section="07">
+    <div class="col-12">
+        <div class="c-page-head c-page-head-xs">
+            <div class="u-heading__large u-heading__large-xs u-pr--6">{{title}}</div>
+            <a href="{{link}}" class="c-page-head__link">View all</a>
+            {% if admin and dev %}
+                <p class="c-page-head__panel-name">Panel 07</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="row {{labelInfo}} {{noAuthor}}">
+    <div class="col-12 col-md-8 col-xl-6 u-tablet-border-right u-desktop-border-right u-desktop-lg-border-right" >
+        {% if articles[articleCount] %}
+            {{this.render('../_single-article.twig', {
+                article: articles[articleCount], 
+                position: (articleCount + 1),
+                imageSize: {width: 630, height: 326},
+                imageSizes: {
+                    "mobile": {
+                        width: 460,
+                        height:280
+                    },
+                    "mobileLarge": {
+                        width: 510,
+                        height:228
+                    },
+                    "tablet" : {
+                        width: 461,
+                        height: 323
+                    },
+                    "tabletLarge" : {
+                        width: 730,
+                        height: 323
+                    }
+                },
+                lazyload: lazyload,
+                containerClass: "card-11-mobile card-11-tablet card-11-desktop card-11-desktop-lg card-highlight"
+            }) | raw}}
+            {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
+
+        {% endif %}
+        <hr class="o-rule o-rule--15 d-md-none">
+    </div>
+    
+    <div class="col-12 col-md-4 col-xl-3 u-desktop-lg-border-right">
+        <hr class="o-rule o-rule--15 d-md-none">
+        <div class="row">   
+            {% if articles[articleCount] %}
+                <div class="col-12">
+                    {{this.render('../_single-article.twig', {
+                        article: articles[articleCount], 
+                        imageSize: {width: 300, height: 183},
+                        imageSizes: {
+                            "mobile": {
+                                width: 76,
+                                height:76
+                            },
+                            "tablet" : {
+                                width: 216,
+                                height: 145
+                            },
+                            "tabletLarge" : {
+                                width: 340,
+                                height: 145
+                            }
+                        },
+                        lazyload: lazyload,
+                        containerClass: "card-2-mobile card-4-tablet card-4-desktop card-4-desktop-lg card-video"
+                    }) | raw}}
+                </div>
+                
+                
+                    {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
+                    <div class="col-12 d-md-none">
+                        <hr class="o-rule o-rule--15">
+                        {# <hr class="o-rule d-md-block"> #}
+                    </div>
+                
+            {% endif %}
+            
+        </div>
+
+    </div>    
+    
+    <div class="col-12 col-xl-3">
+        <hr class="o-rule o-rule--15 d-none d-md-block d-xl-none">
+        <div class="row">
+            
+            {% for i in 0..2 if articles[articleCount] %}
+                <div class="col-12 col-md-4 col-xl-12 {% if i < 2 %} u-tablet-border-right u-desktop-border-right{% endif %}">
+                    {{this.render('../_single-article.twig', {
+                        article: articles[articleCount], 
+                        position: (articleCount+1),
+                        imageSize: {width: 76, height: 76},
+                        imageSizes: {
+                            "mobile": {
+                                width: 76,
+                                height: 76
+                            },
+                            "tablet" : {
+                                width: 76,
+                                height: 76
+                            },
+                        },
+                        lazyload: lazyload,
+                        containerClass: "card-2-mobile card-2-tablet card-2-desktop card-2-desktop-lg card-video"
+                    }) | raw}}
+                {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
+                </div>
+                {% if i < 2 %}
+                    <div class="col-12 d-md-none d-xl-block">
+                        <hr class="o-rule o-rule--15">
+                    </div>
+                {% else %}
+                    <div class="col-12 d-md-none">
+                        <hr class="o-rule o-rule--15">
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    </div>
+    
+    
+</div> <!-- row -->

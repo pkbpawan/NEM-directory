@@ -1,0 +1,33 @@
+{% set articleCount = 0 %}
+{% set cardIndex = 0 %}
+
+{% set labelInfo = cusLabel ? 'hide_labels' : '' %}
+{% set noAuthor = authorHide ? 'hide_author' : '' %}
+
+<div class="row" data-section="property">
+    <div class="col-12">
+        <div class="c-page-head c-page-head-xs">
+            <div class="u-heading__large u-heading__large-xs u-pr--6">{{title}}</div>
+            <a href="{{link}}" class="c-page-head__link">View all</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="row {{labelInfo}} {{noAuthor}}">       
+    {% for i in 0..12 if articles[articleCount] %}
+        <div class="col-12 col-md-6 col-lg-3">
+            {{this.render('../_single-article.twig', {
+                article: articles[articleCount], 
+                position: (articleCount+1),
+                template: 'property',
+                networkData: networkData,
+                imageSize: {width: 360, height: 270},
+                lazyload: lazyload,
+                containerClass: 'card-property-mobile card-property-tablet card-property-desktop',
+                timeSuppress: timeSuppress
+            }) | raw}}
+            {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
+        </div>
+    {% endfor %}
+</div>

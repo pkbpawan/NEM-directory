@@ -1,0 +1,21 @@
+{% set config       = _Network.getThemeConfig() %}
+{% set subscribeLink =  config['article-subscribe']['url'] is defined and config['article-subscribe']['url'] is not empty ? config['article-subscribe']['url'] : 'javascript:;' %}
+<div class="c-articleSubscribe">
+    <div class="c-articleSubscribe_text">
+        <h3 class="c-articleSubscribe_text-heading">Join our mailing list</h3>
+        <div class="c-articleSubscribe_text-subHeading">Subscribe to our newsletter</div>
+    </div>
+    <div class="c-articleSubscribe_btn">
+        <a href={{subscribeLink}} target="_blank" class="c-button c-button--v2">
+            <span class="c-button_text">Subscribe</span>
+            <span class="c-button_icon">
+                <svg width="14" height="12" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#FFF" stroke-width="2" fill="none" fill-rule="evenodd">
+                        <path stroke-linecap="square" d="M1 5.996h10.198"/>
+                        <path d="m6.44 11.198 6.046-5.202L6.44 1"/>
+                    </g>
+                </svg>
+            </span>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+{
+    "compressHtml" : false,
+    "feed" : {
+        "imageParams" : {
+            "width" : 750
+        },
+        "addAuthorName": true
+    },
+    "module" : {
+        "debug" : {
+            "enabled" : true
+        },
+        "event" : {
+            "enabled" : true
+        },
+        "blog" : {    
+            "routes": {
+                "allowOverride": true,
+                "comment": "allowing override is for single page apps that hand their own routing"
+            },
+        
+            "endUserAccess" : [
+
+                                    "jobs",    "prop",     "events",
+                    "local",        "",         "426",      "422",    
+                    "Shepparton",   "",         "",         "1203",   
+                    "UAT",          "",         "3337"
+                
+            ],
+            "extendedAttributes": [
+                {
+                    "label": "Content Type",
+                    "type": "inputbox",
+                    "name": "contenttype"
+                },
+                {
+                    "name": "publishto",
+                    "label": "Publish to...",
+                    "type": "inputbox"
+                },
+                {
+                    "name": "propertylistingsid",
+                    "label": "Property listings blog id",
+                    "type": "inputbox"
+                }
+            ]
+        },
+        "article": {
+            "extendedAttributes": [
+                {
+                    "label": "",
+                    "type": "radio",
+                    "name": "premium",
+                    "options": {
+                        "Premium": "Premium",
+                        "Free": "Free"
+                    }
+                },
+                {
+                    "label": "Allow comments",
+                    "type": "radio",
+                    "name": "comments",
+                    "options": {
+                        "on": "On",
+                        "off": "Off"
+                    }
+                },
+                {
+                    "label": "Remove sponsor logos",
+                    "type": "checkbox",
+                    "name": "logos"
+                }
+ 
+            ]
+        }
+    }
+}

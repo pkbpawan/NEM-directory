@@ -1,2 +1,2 @@
-# NEM-directory
-NEM Business Directory
+# NEM-news
+NEM news

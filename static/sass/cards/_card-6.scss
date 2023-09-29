@@ -1,0 +1,179 @@
+
+// for "gallery" version see card-11
+
+@mixin card-6-base() {
+    
+    .c-cards-view {
+        height: 228px;
+        &__media {
+            @include flex-width(143px);
+            height: 156px;
+            position: absolute;
+            bottom: 0;
+            left:  0;
+        }
+
+        &__container {
+            height: 100%;
+            
+        }
+        &__category {
+            // display:none;
+        }
+        &__heading {
+            @include font-size(17);
+            font-weight: $weightBold;
+            @include flex-height(55px);
+        }
+        &__description {
+            display:block;
+            @include font-size(13);
+            @include flex-height(110px);
+            margin-left: 160px;
+        }
+        &__author {
+            margin-left: 160px;
+            bottom: 0;
+            position: absolute;
+        }
+
+        &.without-image {
+            height: unset;
+            
+            .c-cards-view{
+                &__container{
+                    background-color: $grey-7;
+                    border-top: 7px solid $mainColor;
+                    padding: 15px 20px 30px;
+                }
+                &__heading {
+                    min-height: 1;
+                }
+                &__description {
+                    @include flex-height(65px);
+                    margin-left: 0;
+                    display: block;
+                }
+                &__author {
+                    margin-left: 0;
+                    position: relative;
+                    margin-top: 10px;
+                }
+            }
+
+            
+        }
+
+    }
+}
+
+.card-6-mobile {
+    @media #{$mobile} {
+        @include card-6-base();
+    }
+}
+
+@mixin card-6-tablet-base() {
+    @include card-6-base();
+    .c-cards-view {
+        height: 308px;
+        &__media {
+            @include flex-width(241px);
+            @include flex-height(184px);
+            
+        }
+        &__heading {
+            @include font-size(24);
+            @include flex-height(65px);
+        }
+        &__description {
+            @include flex-height(117px);
+            margin-top: 50px;
+            margin-left: 264px;
+        }
+        &__author {
+            margin-left: 264px;
+        }
+        &.without-image{
+            .c-cards-view {
+                &__container{
+                    @include flex-height(326px);
+                    padding-right: calc(50% + 30px);
+                }
+                &__heading {
+                    @include font-size(24);
+                    @include flex-height(161px);
+                    margin-top: 46px;
+                }
+                &__description{
+                    position: absolute;
+                    top: 96px;
+                    left: calc(50% + 60px);
+                }
+            }
+        }
+    }
+
+}
+
+.card-6-tablet {
+    @media #{$tablet} {
+        @include card-6-tablet-base();
+    }
+}
+
+.card-6-desktop {
+    @media #{$desktop} {
+        @include card-6-tablet-base();
+    }
+}
+.card-6-desktop-lg {
+    @media #{$desktop-up} {
+        @include card-6-tablet-base();
+        
+        .c-cards-view {
+            height: 326px;
+            &__media {
+                @include flex-width(346px);
+                @include flex-height(226px);
+                
+            }
+            &__heading {
+                @include font-size(24);
+                @include flex-height(65px);
+            }
+            &__description {
+                @include flex-height(117px);
+                @include font-size(14);
+                margin-left: 370px;
+            }
+            &__author {
+                margin-left: 370px;
+            }
+            &.without-image{
+                .c-cards-view {
+                    &__container{
+                        @include flex-height(326px);
+                        padding-right: calc(50% + 30px);
+                    }
+                    &__heading {
+                        @include font-size(24);
+                        @include flex-height(161px);
+                        margin-top: 46px;
+                    }
+                    &__description{
+                        @include flex-height(161px);
+                        position: absolute;
+                        top: 96px;
+                        left: calc(50% + 60px);
+                        margin-top: 0;
+                        padding-right: 20px;
+                    }
+                }
+            }
+            
+        }
+        
+    }
+}
+

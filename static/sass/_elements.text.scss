@@ -1,0 +1,36 @@
+h1{
+  font-weight: $weightBold;
+  @include font-size(35);
+  line-height: 38px;
+  letter-spacing: 0;
+  color: $black;
+}
+h2{
+  font-weight: $weightBold;
+  @include font-size(24);
+  line-height: 29px;
+  color: $black;
+}
+h3{
+  font-weight: $weightBold;
+  @include font-size(18);
+  line-height: 24px;
+  color: $black;
+}
+h4{
+  font-weight: $weightBold;
+  @include font-size(16);
+  line-height: 20px;
+  color: $black;
+}
+h5{
+  font-weight:$weightSemibold;
+  @include font-size(14);
+  line-height: 18px;
+  color: $black;
+}
+p,li{
+  @include font-size(14);
+  line-height: 18px;
+  color: $grey-1;
+}

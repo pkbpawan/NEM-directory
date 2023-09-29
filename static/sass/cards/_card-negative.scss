@@ -1,0 +1,71 @@
+/* Begin cards view style */
+.card-negative{
+    .c-cards-view {
+        &__container {
+            padding: 0 20px;
+            background-color: $grey-2;
+        }
+
+        &__category {
+            
+            color: $white;
+            
+        }
+
+        
+
+        &__heading {
+            color: $white;
+        }
+
+        &__description {
+            color: $white;
+        }
+
+        &__additional-info {
+            
+            &__price {
+                
+                color: $grey-5;
+            }
+
+            &__features {
+                
+                &-list {
+                    
+
+                    .icon {
+                        
+                        color: $mainColor;
+                    }
+
+                    .text {
+                        
+                        color: $grey-5;
+                    }
+                }
+            }
+        }
+
+    
+
+        &__author-name {
+            
+            color: $grey-5;
+            padding-bottom: 20px;
+        }
+
+        &__time {
+            color: $grey-5;
+            
+        }
+
+
+
+
+        
+
+    }
+}
+
+
