@@ -16,7 +16,11 @@
 
 {# c54b5f8d-f9b5-4b59-b8ca-555f822d0448 #}
 
-
+{% if not _User.isGuest() %}
+    {% set redir = _Page.setHttpRedirects(
+        { '|^/.*|': networkData.defaultBlogUrl, }, false) 
+    %} 
+{% endif %}
 
 {% set break = false %}
 {% for k, p in params  %}

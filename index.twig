@@ -1,23 +1,10 @@
 {{ set(this, 'title', _Blog.getBlogTitle()) }}
-
-{% cache 'indexCache_1' 300 %}
-
-
 {% set networkData  = _Network.getNetworkData() %}
-{% set layoutTitle  = _Page.getLayoutTitle() | lower | replace({' ': '_'}) %}
 {% set blogData     = _Blog.getBlog() %}
-{% set homeBlog     = blogData['title'] | lower %}
 {% set config       = _Network.getThemeConfig() %}
-{% set layout       = blogData.layout %}
-{% set dev          = _AppHelper.getApplicationEnv() == 'DEV' ? false : false %}
-
-{% set bannerSpots  = [3,5] %}
-{% set blogFeeds    = {} %}
-{% set panels       = [] %}
-{% set breaking = {} %}
-
 {% set currentPage  = _Blog.getBlogTitle() %}
 {% set mainClassifiedsPage  = currentPage %}
+
 {% set sideMenu = _Menu.get({'menuType': 'header', "menuGroupName": currentPage, 'include_article_count': true }) %}
 {% set panels = _Menu.get({'menuType': 'header', "menuGroupName":  currentPage ~ " panels"}) %}
 {% set url = _AppHelper.getParsedUrl() %}
@@ -129,180 +116,62 @@
 {% endif %}
 
 
-
-{# *******************************************************
-            CONFIG OPTIONS SET IN PLATFORM
-******************************************************* #}
-
-{% if config['active'] is not defined or config['active'] == true %}
-
-    {% if config['page']['index']['sections'] is defined %}
-
-        {% set panels = config['page']['index']['sections'] %}
-
-        {% set sectionOrder = panels | keys %}
-
-        {% set blogFeeds = {} %}
-
-        {% for i, panel in panels %}
-
-            {% if panel['articleOrder'] is defined %}
-
-                {# If a panel has multiple blogs we get the count of items to fetch from iterating
-                over the articleOrder array #}
-                {% for blogName in panel['articleOrder'] %}
-
-                    {% if blogFeeds[blogName] is not defined %}
-                        {% set blogFeeds = blogFeeds | merge({ (blogName): { "limit" : 1} }) %}
-                    {% else %}
-
-                        {% set count = blogFeeds[blogName].limit %}
-
-                        {% set blogFeeds = blogFeeds | merge({ (blogName): { "limit" : count + 1} }) %}
-                    {% endif %}
-                {% endfor %}
-
-
-
-            {# If a panel has a single blog we get the count of items to fetch from checking the articleCount key #}
-            {% else %}
-
-                {% set blogName = panel['blog'] %}
-
-                {% if panel['articleCount'] is defined %}
-
-                    {% set count = panel['articleCount'] %}
-                    
-                    {% if blogFeeds[blogName] is not defined or blogFeeds[blogName].limit < count %}
-                        {% set blogFeeds = blogFeeds | merge({ (blogName): { "limit" : count} }) %}
-                    {% endif %}
-
-                {% endif %}
-            {% endif %}
-
-        {% endfor %}
-        
-    {% endif %}
-
-
-
-    {% if layoutTitle == 'index_breaking_news' %}
-        {% if config['page']['index']['breaking-news'] is defined %}
-            {% set breaking = config['page']['index']['breaking-news'] %}
-            {% set blogFeeds = blogFeeds | merge({
-                (breaking.section) : { 
-                    "limit" : breaking.limit
-                    } 
-                }) %}
-        {% endif %}
-    {% endif %}
-
-    {% if config['inventory'][homeBlog]['bannerSpots'] is defined %}
-        {% set bannerSpots = config['inventory'][homeBlog]['bannerSpots'] %}
-    {% endif %}
-
-{% endif %}
-<div class="acme-container">
-    <div class="acme-row">
-        <div class="acme-col-12">
-
-            <div class="c-section-head">
-                <a class="what" href="{{blogData.url}}">
-                    <h1 class="c-section-head__title">{{this.title}}</h1>
-                </a>
-            
-            {% if allowPosting %}
-                <a href="{{networkData.defaultBlogUrl}}/classified-create" class="c-section-head__button c-button c-button--blue">Submit a listing</a>
-            {% endif %}
-            
-                <div class="c-section-head__rule"></div>
-
-            </div>
-
-        
-       {# *********************************************
-                    Filter and search
-          ********************************************* #}
-            <div class="c-filter--search c-filter--search-xs form-group">
-                <div class="c-filter--search--field c-filter--search--field-xs">
-                   
-                    <input type="text" class="form-control" name="search" id="search" placeholder="Search listings">
-                    <div id="searchSpinner" class="spinner" style="position:relative;top:-22px;right:42px;float:right;display:none;"></div>
-                </div>
-                <div class="c-filter--search--select c-filter--search--select-xs">
-                    <div id="classySearchDropdown" class="" style="width:100%"></div>
-                </div>
-                <div class="c-filter--search--button">
-                    <button id="search-button" type="submit" class="c-button c-button--blue">Search</button>
-                </div>
-            </div> 
-        </div>
-    </div>
-    <div class="acme-row">
-        {# ********************************************* Classifieds Side Menu ********************************************* #}
-        <aside class="acme-col-12 acme-col-lg-3 acme-col-md-4 acme-col-sm-4">
-        <div id="classified-menu" class="c-classified-menu c-classified-menu-xs">
-            {{ this.render('/partials/_menu-classifieds.twig', {
-                'menu': sideMenu,
-                'current': currentPage
-            }) | raw }}
-        </div>
-        </aside>
-
-        {# *********************************************
-            Main content
-********************************************* #}
-<div class="acme-col-12 acme-col-lg-9 acme-col-md-8 acme-col-sm-12 acme-com-xs-12">
-
-
-
-
-
-{# *********************************************
-                Full section page
-    ********************************************* #}
-{% if fullPage == true %}
-
-
-    {% set articles = blogFeeds[blogTitle].feed.articles %}
-    <div id="results" class="">
-
-        <div class="acme-row c-section-head" data-bguid="{{blogFeeds[blogTitle]['guid']}}">
+<main id="main" class="site-main u-margin-top-60 u-margin-bottom-60 u-mobile-no-margin-top" role="main" data-article-limit="{{limit}}" data-article-count="{{articles | length}}">
+    <div class="acme-container">
+        <div class="acme-row">
             <div class="acme-col-12">
-                <a href="#">
-                    <div class="c-section-head__title">{{blogTitle}}</div>
-                </a> 
-                <div class="c-section-head__rule"></div>
+
+                <div class="c-section-head">
+                    <a class="what" href="{{blogData.url}}">
+                        <h1 class="c-section-head__title">{{this.title}}</h1>
+                    </a>
+                
+                {% if allowPosting %}
+                    <a href="{{networkData.defaultBlogUrl}}/classified-create" class="c-section-head__button c-button c-button--blue">Submit a listing</a>
+                {% endif %}
+                
+                    <div class="c-section-head__rule"></div>
+
+                </div>
+
+            
+           {# *********************************************
+                        Filter and search
+              ********************************************* #}
+                <div class="c-filter--search c-filter--search-xs form-group">
+                    <div class="c-filter--search--field c-filter--search--field-xs">
+                        {# <span id="search-button-2" class="fa fa-search c-search-icon"></span> #}
+                        <input type="text" class="form-control" name="search" id="search" placeholder="Search listings">
+                        <div id="searchSpinner" class="spinner" style="position:relative;top:-22px;right:42px;float:right;display:none;"></div>
+                    </div>
+                    <div class="c-filter--search--select c-filter--search--select-xs">
+                        <div id="classySearchDropdown" class="" style="width:100%"></div>
+                    </div>
+                    <div class="c-filter--search--button">
+                        <button id="search-button" type="submit" class="c-button c-button--blue">Search</button>
+                    </div>
+                </div>
             </div>
         </div>
+        
+
+
+
 
         <div class="acme-row">
-        {% for i in 0..11 if articles[i] %}
-            <div class="acme-col-12 acme-col-md-12 acme-col-lg-4">
-                {{this.render('/partials/_single-article.twig', {
-                    article: articles[articleCount], 
-                    position: (articleCount+1),
-                    imageSize: {width: 285, height: 192},
-                    cardType: "acme-",
-                    contentType: contentType,
-                    containerClass: "acme-card-1-mobile acme-card-1-tablet acme-card-1-desktop",
-                    gravity: "north"
-                }) | raw}}
-                {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
-            </div>
-        {% endfor %}
-
-        </div>
 
 
-        <div id="classified_more" class="acme-row"> </div>
-
-        <div class="acme-row"> 
-            <div class="acme-col-12">
-                <a href="#" id="section-load" class=""></a>
-            </div>
-        </div>
-    </div>
+           {# *********************************************
+                        Classifieds Side Menu
+              ********************************************* #}
+            <aside class="acme-col-12 acme-col-lg-3 acme-col-md-4 acme-col-sm-4">
+                <div id="classified-menu" class="c-classified-menu c-classified-menu-xs">
+                    {{ this.render('/partials/_menu-classifieds.twig', {
+                        'menu': sideMenu,
+                        'current': currentPage
+                    }) | raw }}
+                </div>
+            </aside>
 
 
 
@@ -310,162 +179,137 @@
 
 
 
-{# *********************************************
-                    Category panel page
-    ********************************************* #}
-{% else %}
-    <div id="results" class="">
-
-        {% set bannerNo = 1 %}
-        {% set pageSectionId = 1 %}
-
-        {% for pagesection in blogFeeds | keys %}
+           {# *********************************************
+                            Main content
+              ********************************************* #}
+            <div class="acme-col-12 acme-col-lg-9 acme-col-md-8 acme-col-sm-12 acme-com-xs-12">
 
 
-            {% set params = {
-                'networkData' : networkData,
-                'blogFeeds'   : blogFeeds,
-                'blogData'    : blogFeeds[pagesection],
-                'dev'         : dev,
-                'config'      : {
-                    blogs: [pagesection],
-                    template: "partials/panels/section-classified-panel",
-                    title: pagesection,
-                    nomargin: true,
-                    wrapper: false,
-                    link: blogData.url ~"?section=" ~ pagesection | lower,
-                    template_params: {
-                        loadmore: true,
-                        loadmore_id: pageSectionId ~ "",
-                        contentType: contentType,
-                        blog_guid: blogFeeds[pagesection]['guid'],
-                        index: loop.index
-                    }
-                },
-            } %}
 
-            {{this.render('render.twig', params) | raw}} 
-            
-            {% set pageSectionId = pageSectionId + 1 %}
 
-            {% if loop.index in bannerSpots %}
-                {% if config['inventory']['adSpace']['banner'][bannerNo] is defined %}
-                    <div class="j-adslot" id="{{config['inventory']['adSpace']['banner'][bannerNo]}}" data-adshape="banner"></div>
+
+                {# *********************************************
+                                Full section page
+                    ********************************************* #}
+                {% if fullPage == true %}
+
+
+                    {% set articles = blogFeeds[blogTitle].feed.articles %}
+                    <div id="results" class="">
+
+                        <div class="acme-row c-section-head" data-bguid="{{blogFeeds[blogTitle]['guid']}}">
+                            <div class="acme-col-12">
+                                <a href="#">
+                                    <div class="c-section-head__title">{{blogTitle}}</div>
+                                </a> 
+                                <div class="c-section-head__rule"></div>
+                            </div>
+                        </div>
+
+                        <div class="acme-row">
+                        {% for i in 0..11 if articles[i] %}
+                            <div class="acme-col-12 acme-col-md-12 acme-col-lg-4">
+                                {{this.render('/partials/_single-article.twig', {
+                                    article: articles[articleCount], 
+                                    position: (articleCount+1),
+                                    imageSize: {width: 285, height: 192},
+                                    cardType: "acme-",
+                                    contentType: contentType,
+                                    containerClass: "acme-card-1-mobile acme-card-1-tablet acme-card-1-desktop",
+                                    gravity: "north"
+                                }) | raw}}
+                                {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
+                            </div>
+                        {% endfor %}
+
+                        </div>
+
+
+                        <div id="classified_more" class="acme-row"> </div>
+
+                        <div class="acme-row"> 
+                            <div class="acme-col-12">
+                                <a href="#" id="section-load" class=""></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                {# *********************************************
+                                    Category panel page
+                    ********************************************* #}
+                {% else %}
+                    <div id="results" class="">
+
+                        {% set bannerNo = 1 %}
+                        {% set pageSectionId = 1 %}
+
+                        {% for pagesection in blogFeeds | keys %}
+
+
+                            {% set params = {
+                                'networkData' : networkData,
+                                'blogFeeds'   : blogFeeds,
+                                'blogData'    : blogFeeds[pagesection],
+                                'dev'         : dev,
+                                'config'      : {
+                                    blogs: [pagesection],
+                                    template: "partials/panels/section-classified-panel",
+                                    title: pagesection,
+                                    nomargin: true,
+                                    wrapper: false,
+                                    link: blogData.url ~"?section=" ~ pagesection | lower,
+                                    template_params: {
+                                        loadmore: true,
+                                        loadmore_id: pageSectionId ~ "",
+                                        contentType: contentType,
+                                        blog_guid: blogFeeds[pagesection]['guid'],
+                                        index: loop.index
+                                    }
+                                },
+                            } %}
+
+                            {{this.render('render.twig', params) | raw}} 
+                            
+                            {% set pageSectionId = pageSectionId + 1 %}
+
+                            {% if loop.index in bannerSpots %}
+                                {% if config['inventory']['adSpace']['banner'][bannerNo] is defined %}
+                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['banner'][bannerNo]}}" data-adshape="banner"></div>
+                                {% endif %}
+                                {% set bannerNo = bannerNo + 1 %}
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
                 {% endif %}
-                {% set bannerNo = bannerNo + 1 %}
-            {% endif %}
 
-        {% endfor %}
 
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
-{% endif %}
+    <div class="clearfix"></div>
+
+
+</main>
 
 
 
+
+<div id="overlay" class="c-classified-menu__overlay"></div>
+<div id="classified-menu-mobile" class="c-classified-menu c-classified-menu-xs c-classified-menu--mobile">
+    <div id="classified-menu-mobile-open" class="c-classified-menu__open">Categories</div>
+    {{ this.render('/partials/_menu-classifieds.twig', {'menu': sideMenu}) | raw }}
 </div>
-    </div>
 
-</div>
-
-
-
-{# <div class="clearfix"></div> #}
-
-
-<main id="main" class="site-main" role="main" data-layout="{{layoutTitle}}">
-
-
-{# *******************************************************
-                Fetch all needed feeds
-******************************************************* #}
-{% for key in blogFeeds | keys %}
-
-    {% set break = false %}
-    {% for blog in networkData.networkBlogs if not break %}
-
-
-        {# FOR DEV  #}
-        {% if dev %}
-            {% set blogFeeds = blogFeeds | merge({
-                (key) : { 
-                    'feed' : _Blog.getBlogFeed({'limit': 2, 'offset': 0}), 
-                    'link' : blog.link 
-                    } 
-                }) %}
-        {% endif %}
-
-
-        {# FOR PRODUCTION #}
-        {% if not dev and blog.title | lower == key | lower %}
-         {% if blog.title | lower == key | lower %} 
-            {% set feed = _Blog.getBlogFeed({
-                'offset' : 0, 
-                'blogid' : blog.guid,
-                'limit'  : blogFeeds[key]['limit']
-                })
-            %}
-
-            {% set blogFeeds = blogFeeds | merge({
-                (key) : {
-                    'feed'      : feed,
-                    'link'      : blog.link
-                    }
-                }) %}
-            {% set break = true %}
-        {% endif %}
-        {% endif %}
-
-    {% endfor %}
-{% endfor %}
-
-
-    {# *******************************************************
-                        RENDER PANELS
-    ******************************************************* #}
-
-    
-
-    {% set bannerNo = 1 %}
-    {% for pagesection in panels | keys %}
-
-        {% if panels[pagesection]['active'] is not defined or panels[pagesection]['active'] == true %}
-
-
-            {% set params = {
-                'networkData' : networkData,
-                'blogFeeds'   : blogFeeds,
-                'blogData'    : blogData,
-                'config'      : panels[pagesection],
-                'admin'       : _User.isAdminUser(),
-                'dev'         : dev
-            } %}
-
-        {% if breaking.partial is defined and "00" in panels[pagesection]['template'] %}
-            {% set params = params | merge({'config' : breaking.partial }) %}
-        {% endif %}
-
-            {{this.render('render.twig', params) | raw}} 
-
-            {% if loop.index in bannerSpots %}
-                {% if config['inventory']['adSpace']['banner'][bannerNo] is defined %}
-                    <div class="j-adslot" id="{{config['inventory']['adSpace']['banner'][bannerNo]}}" data-adshape="banner"></div>
-                {% endif %}
-                {% set bannerNo = bannerNo + 1 %}
-            {% endif %}
-
-
-        {% endif %}
-
-    {% endfor %}
-
-
-    <div class="j-keyword-cont" data-keywords="{{blogData.keywords}}"></div>
-</main><!-- .site-main -->
-
-
-
-
-{% endcache %}
 
 <script>
     // main script is defered so event listener makes sure

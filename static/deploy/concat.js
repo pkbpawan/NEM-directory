@@ -24509,8 +24509,6 @@ Acme.templates.mailChimpSignup =
         if ($(".j-adslot").length > 0) {
             var adslots = $(".j-adslot");
             var deviceSize = getDeviceForAd();
-
-            var allAdsKeywords = []
             for (var i=0;i<adslots.length;i++) {
                 var elem = adslots[i];
                 var self = $("#"+elem.id);
@@ -24533,61 +24531,43 @@ Acme.templates.mailChimpSignup =
                     keysArray.push('default');
                 }
                 var keysString = keysArray.join(',')
-                allAdsKeywords.push(keysString)
-            }
-
-            if(allAdsKeywords.length > 0) {
-
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: _appJsConfig.appHostName + '/api/ad/get-all',
                     dataType: 'json',
                     data: {
-                        'multiKeywords': allAdsKeywords,
+                        'keywords': keysString,
                     },
                     success: function (data, textStatus, jqXHR) {
                         if (data.length < 1 ){
                             console.log('no ads found with those keywords',keysString)
                             return;
-                        } 
-
-                        let k = 0;
-                        for (k; k < data.length; k++) {
-
-                            if (data[k].length < 1) {
-                                continue;
+                        } else if (data.length > 1 ){
+                            var k = Math.round(Math.random()*(data.length-1));
+                        } else {
+                            var k = 0;
+                        }
+                        var self = data[k];
+                        keys = self.keywords.split(',');
+                        if (self.media.path){
+                            var settings = self.button.url.split(' ');
+                            var extras = " ";
+                            for (i=1;i<settings.length;i++){
+                                extras = extras + ' ' + settings[i]
                             }
-
-                            let index = 0;
-                            if (data[k].length > 1) {
-                                index = Math.floor(Math.random() * data[k].length);
-                            }
-
-                            let item = data[k][index]
-                            let keys = item.keywords.split(",");
-
-                            if (item.media.path){
-                                var settings = item.button.url.split(' ');
-                                var extras = " ";
-                                for (i=1;i<settings.length;i++){
-                                    extras = extras + ' ' + settings[i]
-                                }
-
-                                $("#"+keys[0]).html("<div class='advertisment advertisment__"+keys[0]+" advertisment__"+keys[1]+"'><a href='"+settings[0]+"'"+extras+"><img src='"+item.media.path+"'></a></div>");
-                            } 
-                            else if (item.description){
-                                $("#"+keys[0]).html("<div class='advertisment advertisment__"+keys[0]+" advertisment__"+keys[1]+"'>"+item.description+"</div>");
+                            $("#"+keys[0]).html("<div class='advertisment advertisment__"+keys[0]+" advertisment__"+keys[1]+"'><a href='"+settings[0]+"'"+extras+"><img src='"+self.media.path+"'></a></div>");
+                        } else if (self.description){
+                            
+                            $("#"+keys[0]).html("<div class='advertisment advertisment__"+keys[0]+" advertisment__"+keys[1]+"'>"+self.description+"</div>");
+                        }
                         
-                            }
-                        } 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log('error retreiving ad', textStatus, errorThrown);
                         $('#createUserErrorMessage').text(textStatus);
                     },
                 });
-
-            } 
+            }
         }
 
         function getDeviceForAd() {
@@ -28885,25 +28865,18 @@ $('#signinBtn, #articleSigninBtn').on('click', function() {
               Acme.server
                 .create(mailchimpLink, subscribeData)
                 .then(function (r) {
-                  //console.log(r);
-                  window.location.href =
-                    location.origin +
-                    "/auth/thank-you?plan_id=" +
-                    $("#planid").val();
+                  console.log(r);
+                  window.location.href = location.origin + "/auth/thank-you";
                 })
                 .fail(function (r) {
                   console.log(r);
-                  window.location.href =
-                    location.origin +
-                    "/auth/thank-you?plan_id=" +
-                    $("#planid").val();
+                  window.location.href = location.origin + "/auth/thank-you";
                 });
             }
           })
           .fail(function (r) {
             console.log(r);
-            window.location.href =
-              location.origin + "/auth/thank-you?plan_id=" + $("#planid").val();
+            window.location.href = location.origin + "/auth/thank-you";
           });
       }
 

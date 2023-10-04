@@ -268,10 +268,10 @@
                                 <div itemprop="headline" class="c-article__title">
                                     {{ quotes.smarten(article.title) }}
                                 </div>
-                                <div class="c-article__posted-on" itemprop="datePublished">
-                                    <time class="c-article__published" content="{{article.publishedDate}}">{{article.publishedDate}}</time>
+                                <div class="c-article__posted-on">
+                                    <time class="c-article__published" itemprop="datePublished" content="{{article.publishedDate}}">{{article.publishedDate}}</time>
                                     {% if updated %}
-                                        <time class="c-article__updated" content="{{ updateDate | capitalize }}">Updated {{ updateDate | capitalize }}</time>
+                                        <time class="c-article__updated" itemprop="datePublished" content="{{ updateDate | capitalize }}">Updated {{ updateDate | capitalize }}</time>
                                     {% endif %}
 
                                 </div>
@@ -282,14 +282,12 @@
                                         <div class="c-article__posted-by">
                                             <div class="c-article__author">
                                                 <div class="c-article__author--info">
-                                                    <div  class="c-article__author" itemscope itemprop="author" itemtype="https://schema.org/Person">
-                                                        <meta itemprop="name" content="{{article.createdBy['displayName']}}">
-                                                        <div class="c-article__avatar"  style="background-image: url({{ profileImg }});"></div>
+                                                    <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="c-article__author">
+                                                        <div class="c-article__avatar" itemprop="image" style="background-image: url({{ profileImg }});"></div>
                                                         {% if config['hide-author'] is defined and config['hide-author'] %}
-                                                            <p  class="c-article__author-name">{{ article.createdBy['displayName'] }}</p>
+                                                            <p itemprop="name" class="c-article__author-name">{{ article.createdBy['displayName'] }}</p>
                                                         {% else %}
-                                                        
-                                                            <a itemprop="url" href="{{_AppHelper.getUserProfileUrl(article.createdBy['username'])}}/posts">{{ article.createdBy['displayName'] }}</a>
+                                                            <a itemprop="url" href="{{_AppHelper.getUserProfileUrl(article.createdBy['username'])}}/posts"><p class="c-article__author-name" itemprop="name">{{ article.createdBy['displayName'] }}</p></a>
                                                         {% endif %}
                                                     </div>
 
@@ -356,13 +354,6 @@
 
 
                                     {% if article.media|length > 0 %}
-
-                                    {% if article.media[0]['type'] != 'video' %}
-                                        <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject" >
-                                            <meta itemprop="url" content="{{ _Media.getMediaUrl(article.media[0], 0, 0, {'crop': 'fill', 'gravity': 'auto'} )}}">
-                                        </div>
-                                    {% endif %}
-
                                         {% set imageFeature = featured == 'image' ? true : false %}
                                         {{this.render('partials/gallery.twig', {
                                             media: article.media,
@@ -378,7 +369,7 @@
 
                             {% endif %}
 
-                            <div class="c-article__container c-article__container-sm" itemprop="articleBody">
+                            <div class="c-article__container c-article__container-sm">
                                     {{ ArticleContent | _resizeImages({'width': 600}) | raw }}
                             </div>
 

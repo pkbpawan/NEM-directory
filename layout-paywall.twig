@@ -18,6 +18,11 @@
     {% endif %}
 {% endfor %} #}
 
+{% if not _User.isGuest() %}
+    {% set redir = _Page.setHttpRedirects(
+        { '|^/.*|': networkData.defaultBlogUrl, }, false) 
+    %} 
+{% endif %}
 
 {# {% set ui_plans = aus | slice(0,4) %} #}
 {% set blogCover = false %}   

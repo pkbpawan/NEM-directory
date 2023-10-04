@@ -154,25 +154,18 @@
               Acme.server
                 .create(mailchimpLink, subscribeData)
                 .then(function (r) {
-                  //console.log(r);
-                  window.location.href =
-                    location.origin +
-                    "/auth/thank-you?plan_id=" +
-                    $("#planid").val();
+                  console.log(r);
+                  window.location.href = location.origin + "/auth/thank-you";
                 })
                 .fail(function (r) {
                   console.log(r);
-                  window.location.href =
-                    location.origin +
-                    "/auth/thank-you?plan_id=" +
-                    $("#planid").val();
+                  window.location.href = location.origin + "/auth/thank-you";
                 });
             }
           })
           .fail(function (r) {
             console.log(r);
-            window.location.href =
-              location.origin + "/auth/thank-you?plan_id=" + $("#planid").val();
+            window.location.href = location.origin + "/auth/thank-you";
           });
       }
 
