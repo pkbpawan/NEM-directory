@@ -1,0 +1,72 @@
+.profile-section {
+    width: 100%;
+    // padding: 18px 0px;
+}
+
+.profile-section__managed-header{
+    margin-bottom: 25px;
+}
+
+.profile-section--border {
+    border-bottom: 1px solid color(lightgrey);
+    overflow:auto;
+}
+
+.profile-section__users-left {
+    @include font-size(10);
+    font-weight:400;
+    color:rgb(151, 153, 156);
+    @media #{$tablet-up} {
+        margin-left: 15px;
+    }
+}
+
+
+.profile-section__donate-button {
+    @include font-size(14);
+    text-transform:uppercase;
+    font-weight: 600;
+    border-radius: 0;
+    padding: 14px 13px;
+    color:red;
+    font-weight:600;
+    border: 1px solid black;  
+
+}
+
+.profile-section__cancel-account {
+    font-style: italic;
+    position: absolute;
+    right: 0;
+    @media #{$desktop-up} {
+        margin-top: -70px;
+    }
+    @media #{$tablet} {
+        margin-top: -62px;
+    }
+    @media #{$mobile} {
+        margin-top: -130px;
+    }
+}
+.profile-section__header {
+    width: 100%;
+    // border-bottom: 1px solid color(lightgrey);
+    padding-bottom: 10px;
+    // margin-top:40px;
+    margin-bottom: 15px;
+}
+.profile-section__heading {
+    display: inline;
+    @include font-size(15);
+    font-weight: bold;
+    line-height: 1.33;
+    color: black;
+    padding-bottom: 11px;
+}
+
+.profile-section__card-errors {
+    @include font-size(15);
+    font-weight:600;
+    color:color(red);
+    margin-top:25px;
+}

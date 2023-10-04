@@ -1,0 +1,139 @@
+{% set link = _Blog.getHomeBlogSettings() %}
+{% set footerLogo = networkData.templatePath~'/static/images/logo-alt.png' %}
+{% if networkData.logoMedia | length > 0 %}
+    {% set footerLogo = _Media.getMediaUrl(networkData.secondaryLogoMedia, 650, 144, {'crop': 'fit'} )%}
+{% endif %}
+{% set footerMenu = _Menu.get({'menuType': 'header', 'menuGroupName': 'footer'}) %}
+{% set legalMenu = _Menu.get({'menuType': 'header', 'menuGroupName': 'legal'}) %}
+
+{% set newsletterTitle = 'Join our mailing list' %}
+{% set newsletterText = 'subscribe to our newsletter' %}
+{% set button = 'subscribe' %}
+{% set link = '' %}
+
+{% if config['footer']['newsletterTitle'] is defined and config['footer']['newsletterTitle'] != '' %} 
+    {% set newsletterTitle = config['footer']['newsletterTitle'] %}
+{% endif %}
+{% if config['footer']['newsletterText'] is defined and config['footer']['newsletterText'] != '' %} 
+    {% set newsletterText = config['footer']['newsletterText'] %}
+{% endif %}
+{% if config['footer']['ctabutton'] is defined and config['footer']['ctabutton'] != '' %}
+    {% set button = config['footer']['ctabutton'] %}
+{% endif %}
+{% if config['footer']['ctalink'] is defined and config['footer']['ctalink'] != '' %}
+    {% set link = ' href='~config['footer']['ctalink']~' target="_blank"' %}
+{% endif %}
+
+
+
+<footer class="c-footer c-footer-sm u-margin-top-30 u-desktop-margin-top-60">
+    <div class="c-signup-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-7 offset-xl-2 col-xl-3 u-mobile-margin-bottom-15">
+                    <div class="c-signup-footer__title">{{newsletterTitle|raw}}</div>
+                    <div class="c-signup-footer__text d-none d-md-block d-xl-none u-tablet-margin-top-5">{{newsletterText|raw}}</div>
+                </div>
+                <div class="col-12 col-xl-4 d-md-none d-xl-block u-mobile-margin-bottom-15">
+                    <div class="c-signup-footer__text">{{newsletterText|raw}}</div>
+                </div>
+                <div class="col-12 col-md-5 col-xl-2">
+                    <a {{link}}><div class="c-button c-button--white-bordered c-signup-footer__button{% if link == '' %} j-insider-signup{% endif %}">{{button}} {{ this.render('../../../partials/icons.twig', {icon: 'rightarrow'} ) | raw }}</div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="c-footer__container">
+                    <div class="row">
+                        <div class="col-12 col-xl-3">
+                            <a href="{{networkData.defaultBlogUrl}}" class="c-footer__logo">
+                                <img src="{{footerLogo}}" class="image-fluid"/>
+                            </a>
+                        </div>
+                        
+                        <div class="col-12 col-xl-9">
+                            <hr class="o-rule o-rule--hidden d-xl-none">
+                            <div class="row ">
+                                {% set menuColumns = ['','col-12 col-md-4 col-lg-2 u-mobile-margin-top-20','col-12 col-md-4 col-lg-2','col-12 col-md-4 col-lg-3 u-mobile-margin-top-20','col-12 col-md-4 col-lg-2 u-mobile-margin-top-20 u-tablet-margin-top-40','col-12 col-md-4 col-lg-3 u-mobile-margin-top-20 u-tablet-margin-top-40'] %}
+                                {% if config['footer']['menuStyles']['column'] is defined %}
+                                    {% set menuColumns = config['footer']['menuStyles']['column'] %}
+                                {% endif %}
+                                {% set menuStyle = ['','c-footer__menuparent','empty d-none d-md-block','c-footer__menuparent','c-footer__menuparent','c-footer__menuparent'] %}
+                                {% if config['footer']['menuStyles']['style'] is defined %}
+                                    {% set menuStyle = config['footer']['menuStyles']['style'] %}
+                                {% endif %}
+
+                                {{ this.render('../_submenu.twig', {
+                                    menu: footerMenu,
+                                    menuClass: menuColumns,
+                                    primaryClass: menuStyle,
+                                    childClass: 'c-footer__menuchild'
+                                    }) | raw }}
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="c-footer__copyright">
+            <a href="https://nemedia.com.au" target="_blank">
+                <figure class="c-footer__copylogo">
+                    <img src="{{networkData.templatePath~'/static/images/logo-copy.png'}}">
+                </figure>
+            </a>
+            <div class="c-footer__copytext">
+                &copy; {{networkData.title}} {{ "now"|date("Y") }}
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="c-footer__bottom u-margin-top-80 u-tablet-margin-top-40">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-xl-6">
+                    {{ this.render('../_submenu_navigation.twig', {items: legalMenu, class:'c-footer__bottom__menuitem'}) | raw }}
+                </div>
+                <div class="col-12 col-xl-6 u-mobile-margin-top-10 u-tablet-margin-top-10">
+                    <a href="https://publish.pagemasters.com" class="c-footer__bottom__powered">DESIGNED AND POWERED BY PAGEMASTERS PUBLISH</a>
+                    {% if config['social'] is defined %}
+                    
+                    <div class="c-footer__bottom__social">
+                        {% if config['social']['youtube'] != '' %}
+                            <a href="{{config['social']['youtube']}}" target="_blank" class="c-footer__bottom__social__icon c-footer__bottom__social__icon--youtube">
+                                {{ this.render('../../../partials/icons.twig', {icon: 'youtube'} ) | raw }}
+                            </a>
+                        {% endif %}
+                        {% if config['social']['instagram'] != '' %}
+                            <a href="{{config['social']['instagram']}}" target="_blank" class="c-footer__bottom__social__icon c-footer__bottom__social__icon--instagram">
+                                {{ this.render('../../../partials/icons.twig', {icon: 'instagram'} ) | raw }}
+                            </a>
+                        {% endif %}
+                        {% if config['social']['twitter'] != '' %}
+                            <a href="{{config['social']['twitter']}}" target="_blank" class="c-footer__bottom__social__icon c-footer__bottom__social__icon--twitter">
+                                {{ this.render('../../../partials/icons.twig', {icon: 'twitter'} ) | raw }}
+                            </a>
+                        {% endif %}
+                        {% if config['social']['facebook'] != '' %}
+                            <a href="{{config['social']['facebook']}}" target="_blank" class="c-footer__bottom__social__icon c-footer__bottom__social__icon--facebook">
+                                {{ this.render('../../../partials/icons.twig', {icon: 'facebook'} ) | raw }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ networkData['styling']['customFooter'] | raw }}
+
+</footer>

@@ -1,0 +1,76 @@
+.c-socialWrapper {
+    border-top: 4px solid $black;
+    border-bottom: 1px solid $grey-7;
+    padding: 15px 0;
+
+    &__container {
+        @include flexbox;
+        @include align-items(center);
+
+        @media #{$mobile-sm}{
+            @include align-items(flex-start);
+            flex-wrap: wrap;
+        }
+
+        &-text {
+            color: $black;
+            font-family: $primaryFont;
+            @include font-size(18);
+            line-height: 1.14;
+            font-weight: $weightUltabold;
+            margin-bottom: 20px;
+            @media #{$mobile-sm}{
+                flex: 1 0 100%;
+            }
+        }
+
+        &-link {
+            background-color: #f9ab59;
+            padding: 12px 16px;
+            @include flexbox;
+            @include align-items(center);
+            margin-left: 15px;
+            min-width: 160px;
+            border-bottom: none !important;
+            @media #{$mobile-sm}{
+                flex: 0 0 calc(50% - 5px);
+            }
+
+            + .c-socialWrapper__container-link {
+                @media #{$mobile-sm}{
+                    margin-left: 10px;
+                }
+            }
+
+            .label {
+                margin-left: 12px;
+                @include flexbox;
+                @include flex-direction(column,vertical);
+                color:$black !important;
+                font-family: $secondaryFont;
+                font-weight: $weightBold;
+
+                &-top {
+                    font-size: 12px !important;
+                    font-family: $secondaryFont !important;
+                    font-weight: $weightBold !important;
+                    color:$black !important;
+                    line-height: 1 !important;
+                }
+
+                &-bottom {
+                    font-size: 22px !important;
+                    font-family: $secondaryFont !important;
+                    font-weight: $weightBold !important;
+                    color:$black !important;
+                    line-height: 1.2 !important;
+                }
+            }
+
+            @media #{$mobile-sm}{
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    }
+}

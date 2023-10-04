@@ -1,0 +1,154 @@
+// SPECIAL PUBLICATIONS CARD
+
+@mixin card-15-base() {
+    @include card-name("C15 mobile");
+
+    .c-cards-view {
+
+
+        @include flex-height(114px);
+        align-items: stretch;
+
+        &__media {
+            @include flex-width(86px);
+            height: 114px;
+
+            &--video {
+                &:before {
+                    
+                }
+            }
+        }
+
+        &__container {
+            margin-left: 14px;
+            width:100%;
+            height: inherit;
+        }
+        &__category {
+            display: none;
+        }
+
+        &__heading {
+            @include flex-height(63px);
+            @include font-size(15);
+            margin-top: 36px;
+        }
+        &__author {
+            // margin-top: 12px;
+            position: absolute;
+            top: 12px;
+            padding-top: 0;
+        }
+
+        &__author-name {
+            font-size: 0;
+            letter-spacing: 0;
+        }
+        &__time {
+            @include font-size(10.5);
+            text-transform: uppercase;
+
+        }
+
+
+        &.social {
+            .social-icon {
+                @include size(30px);
+
+                &:before {
+                    @include font-size(13);
+                    line-height: 32px;
+                }
+            }
+
+            &.without-image {
+                .card {
+                    &__container {
+                        @include calc(width, '100% - 30px');
+                        margin-left: 30px;
+                        padding: 0 20px;
+                        margin: 15px 0;
+                        height: inherit;
+                    }
+                }
+            }
+        }
+
+
+        &.without-image {
+            background-color:white;
+
+            .c-cards-view {
+
+                &__container {
+                    width: 100%;
+                    padding: 0 0;
+                    margin-left: 0;
+                    height: inherit;
+                }
+            }
+        }
+    }
+}
+
+.card-15-mobile {
+    @media #{$mobile} {
+        @include card-15-base();
+        .c-cards-view {
+            
+        }
+    }
+}
+
+
+
+
+
+@mixin card-15-tablet-base() {
+    @include card-15-base();
+
+    @include card-name("C15 tablet");
+    .c-cards-view {
+
+        
+    }
+}
+
+
+
+
+
+.card-15-tablet {
+    @media #{$tablet} {
+        @include card-15-tablet-base();
+        .c-cards-view{
+            
+
+
+
+        }
+    }
+}
+
+.card-15-desktop {
+	@media #{$desktop} {
+        @include card-15-tablet-base();
+        @include card-name("C15 desktop");
+
+        .c-cards-view{
+            
+        }
+    }
+}
+
+.card-15-desktop-lg {
+	@media #{$desktop-lg} {
+        @include card-15-tablet-base();
+        @include card-name("C15 desktop");
+
+        .c-cards-view{
+            
+        }
+    }
+}

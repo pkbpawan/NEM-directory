@@ -1,0 +1,316 @@
+.paywall-plan-cards {
+    display: flex;
+	overflow-x: auto;
+	margin-bottom: 30px;
+	font-family:$base-font-family;
+	padding-bottom: 20px;
+	margin-top: 30px;
+}
+
+
+
+.paywall-plan-card {
+
+    @include flexbox();
+    @include flex-direction(column, vertical);
+
+
+    text-align:center;
+    background: $white;
+    // width: 268px;
+    height: 300px;
+    box-shadow: 6px 8px 11px -2px rgba(144, 143, 143, 0.15);
+    border: solid 1px #eeeeee;
+    position:relative;
+
+    @media #{$desktop-up} {
+        // min-height: 326px;
+    }
+
+    @media #{$tablet} {
+        height:241px;
+    }
+
+    // @media #{$mobile-large} {
+    //     height:261px;
+    // }
+
+    @media #{$mobile-sm} {
+        height:50vw;
+    }       
+
+    &--account {
+        height: 225px;
+    }
+    &--unselected {
+        opacity: 0.3;
+    }
+    &__best-value {
+        @include flexbox();
+        @include align-items(center);
+        padding:0 18px;
+        position:absolute;
+        width:100%;
+        @media #{$tablet} {
+            padding:0 16px 0 6px;
+        }
+
+        @media #{$mobile} {
+            padding:0 0;
+            @include align-items(flex-start);
+        }
+
+    }
+    &__best-value-container {
+        @include flexbox();
+        @include flex-direction(row, horizontal);
+        flex:2;
+        @media #{$mobile} {
+            position: absolute;
+            top: -19px;
+            left: -5px;
+        }
+
+    }
+
+    &__best-value-label {
+        @include font-size(14);
+        font-weight:600;
+        color: #e22f22;
+        margin-left:10px;
+        font-family: $primaryFont;
+        @media #{$tablet} {
+            @include font-size(10);
+        }
+        @media #{$mobile} {
+            @include font-size(14);
+            margin-left:5px;
+        }
+
+    }
+    &__best-value-amount {
+        @include font-size(14);
+        font-weight:600;
+        color: #e22f22;
+        margin-left:auto;
+        font-family: $primaryFont;
+        @media #{$tablet} {
+            @include font-size(10);
+        }
+        @media #{$mobile} {
+            @include font-size(14);
+            margin-left:5px;
+        }
+
+
+    }
+
+    &__ribbon {
+        width:28px;
+        height:33px;
+        background-color:#e22f22;
+        position:relative;
+
+        &:before{
+            content: '';
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            bottom: -14px;
+            border-left: 14px solid #e22f22;
+            border-right: 14px solid #e22f22;
+            border-bottom: 14px solid transparent;
+        }
+
+        @media #{$tablet} {
+            width:18px;
+            height:20px;
+            &:before{
+                bottom: -9px;
+                border-left: 9px solid #e22f22;
+                border-right: 9px solid #e22f22;
+                border-bottom: 9px solid transparent;    
+            }
+
+        }
+
+
+        @media #{$mobile} {
+            width:18px;
+            height:25px;
+            &:before{
+                bottom: -9px;
+                border-left: 9px solid #e22f22;
+                border-right: 9px solid #e22f22;
+                border-bottom: 9px solid transparent;    
+            }
+
+        }
+
+
+
+    }
+
+    &__period {
+        font-family: $font-family-sans-serif;
+        @include font-size(18);
+        margin-top:45px;
+        text-transform: uppercase;
+        font-weight:600;
+        color: #727272;
+        &:after {
+            content: "";
+            display:block;
+            height:1px;
+            width:35px;
+            background-color:#979797;
+            margin: 13px auto;
+        }
+
+        &--account {
+            margin-top: 25px;
+        }
+
+        @media #{$tablet} {
+            margin-top:21px;
+            @include font-size(12);
+            &:after {
+                width:21px;
+            }
+            &--account {
+                @include font-size(16);    
+            }
+    
+        }
+
+
+        @media #{$mobile} {
+            margin-top:10px;
+            @include font-size(12);
+            &:after {
+                width:24px;
+            }
+            &--account {
+                @include font-size(16);
+            }
+    
+        }
+
+        @media #{$mobile-sm} {
+            font-size:2.9vw;
+    
+            &--account {
+                @include font-size(14);
+            }
+        }
+    
+    }
+
+    &__price {
+        font-family: $font-family-sans-serif;
+        @include font-size(70);
+        margin-bottom:18px;
+        font-weight:300;
+        @media #{$tablet} {
+            @include font-size(40);
+        }
+        @media #{$mobile} {
+            @include font-size(60);
+            margin-bottom: 20px;
+            margin-top: 12px;
+        }
+        
+        @media #{$mobile-sm} {
+            @include flexbox();
+            @include align-items(center);
+            @include justify-content(center);
+            flex-grow:2;
+            font-size: 11vw;
+            line-height:1.2;
+            margin-top: 0;
+            margin-bottom:5%;
+        }
+
+        &--small {
+            @include font-size(50);
+ 
+        }
+    }
+
+    &__weekly{
+        font-family: $font-family-sans-serif;
+
+        @include font-size(18);
+        font-weight: $weightBold;
+        letter-spacing: 0.6px;
+        text-align: center;
+        color: $red;
+        @media #{$mobile} {
+            @include font-size(14);
+        }
+    }
+
+    &__users{
+        font-family: $font-family-sans-serif;
+        @include font-size(15);
+        font-weight: $weightBold;
+        letter-spacing: 0.5px;
+        text-align: center;
+        color: $black;
+        @media #{$mobile} {
+            @include font-size(13);
+            margin-bottom: 10px;
+        }
+    }
+
+    // &__trial {
+    //     @include font-size(23);
+    //     font-weight:700;
+    //     margin: 0 5px;
+    //     @media #{$tablet} {
+    //         @include font-size(16);
+    //     }
+
+    //     @media #{$mobile} {
+    //         @include font-size(18);
+    //     }
+    //     @media #{$mobile-small} {
+    //         margin-bottom:5%;
+    //         font-size: 3.5vw;
+    //         line-height: 4vw;
+    //     }
+
+    // }
+    &__subscribe-button {
+        font-family: $font-family-sans-serif;
+        @include flexbox();
+        @include justify-content(center);
+        @include align-items(center);
+        min-height:42px;
+        max-height:42px;
+        margin-top:auto;
+        font-weight:700;
+
+        @media #{$tablet} {
+            min-height:45px;
+            max-height:45px;
+            @include font-size(15);
+        }
+
+
+        @media #{$mobile} {
+            min-height:45px;
+            max-height:45px;
+            @include font-size(12);
+            font-weight:700;
+        }
+
+        @media #{$mobile-sm} {
+            min-height:7vw;
+            max-height:7vw;
+            font-size: 3vw;
+            font-weight:600;
+        }
+
+    }
+}

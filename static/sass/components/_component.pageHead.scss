@@ -1,0 +1,96 @@
+/* Begin page head style */
+.c-page-head {
+    @include flexbox();
+    @include justify-content(space-between);
+    @include align-items(center);
+    position: relative;
+    margin-bottom: 25px;
+    padding-top: 10px;
+    margin-top: 15px;
+    @media #{$desktop-lg} {
+        margin-top: 30px;
+    }
+    @media #{$tablet-desktop} {
+        margin-top: 20px;
+    }
+    
+    
+    &:before {
+        content: '';
+        display: block;
+        height: 2px;
+        background-color: $grey-5;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0;
+        
+        
+    }
+    >div   {
+        order: 1;
+    }
+
+    &__link {
+        background-color: unset;
+        color: $grey-3;
+        font-weight: $weightBold;
+        font-family: $font-family-sans-serif;
+        text-transform: uppercase;
+        line-height: 1;
+        @include font-size(11);
+        padding: 0;
+        padding-left: 6px;
+        order: 2;
+        &:hover,
+        &:focus {
+            color: $mainColor;
+        }
+    }
+    &__breaking{
+        position: absolute;
+        height: 53px;
+        left: 0;
+        right: 0;
+        background-color: $black;
+        margin-top: -80px;
+        &__head{
+            color: $white;
+            font-weight: $weightBold;
+            font-size: rem(28);
+            margin-top: 8px;
+        }
+    }
+    &__subhead{
+        margin-top: 0;
+        padding-bottom: 20px;
+        &:after {
+            content: '';
+            display: block;
+            height: 1px;
+            background-color: $grey-7;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            
+            
+        }
+    }
+
+    &__panel-name {
+        position:absolute;
+        left:50%;
+        padding: 2px 15px;
+        background: #618beb;
+        border-radius: 4px;
+        color: white;
+    }
+    
+}
+
+.u-heading__large {
+    line-height: 1;
+}
+
+/* End page head style */

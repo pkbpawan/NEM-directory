@@ -1,0 +1,127 @@
+@mixin card-3-base() {
+    @include card-name("C3 mobile");
+
+    .c-cards-view {
+        @include flex-direction(column, vertical);
+        min-height: 156px;
+        margin-bottom: 0;
+
+        &__media {
+            width: 91px;
+            height: 78px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            &--video {
+                &:before {
+                    @include size(20px);
+                }
+            }
+        }
+
+        &__category {
+            padding-right: 105px;
+        
+        }
+
+        &__info {
+            @include calc(height, '100% - 40px');
+
+        }
+        &__heading {
+            @include flex-height(62px);
+            @include font-size(16);
+            padding-right: 105px;   
+        }
+
+        &__description{
+            display: block;
+            @include font-size(13);
+            @include flex-height(48px);
+            margin-top: 10px;
+        }
+
+
+        &.without-image {
+            .c-cards-view__container {
+                width: 100%;
+                margin-left: 0px;
+                // padding: 0px 20px 0 0;
+            }
+
+            
+
+
+            .c-cards-view__heading {
+                padding-right: 0;
+
+            }
+
+            
+
+        }
+
+        &.social {
+            .social-icon {
+                @include size(30px);
+
+                &:before {
+                    @include font-size(13);
+                    line-height: 32px;
+                }
+            }
+
+            &.without-image {
+                .c-cards-view__container {
+                    padding-top: 40px;
+                }
+            }
+        }
+
+    }
+    
+}
+
+.card-3-mobile {
+    @media #{$mobile} {
+        @include card-3-base();
+    }
+}
+
+
+.card-3-tablet {
+
+    @media #{$tablet} {
+        
+        @include card-3-base();
+        @include card-name("C3 tablet");
+        // .c-cards-view {
+
+        //     &__container {
+        //         width: auto;
+        //     margin-left: 14px;
+        //     }
+        // }
+    }
+}
+
+
+.card-3-desktop {
+
+    @media #{$desktop} {
+
+        @include card-3-base();
+        @include card-name("C3 desktop");
+    }
+}
+
+
+.card-3-desktop-lg {
+
+    @media #{$desktop-lg} {
+
+        @include card-3-base();
+        @include card-name("C3 desktop-lg");
+    }
+}
+

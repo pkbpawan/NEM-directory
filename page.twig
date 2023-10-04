@@ -1,0 +1,39 @@
+{% set config       = _Network.getThemeConfig() %}
+
+{{ set(this, 'title', page.title | raw) }}
+
+
+
+<main id="main" class="o-body-container o-body-container-md u-margin-top-60 u-mobile-no-margin-top" role="main">
+    
+    <div class="page_section">
+        <section class="container" >
+           
+            <div class="content-wrap clearfix" >
+                <div class="row" >
+                    <div class="col-12">
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <h1 class="c-section-head__title">{{this.title}}</h1>
+                                {# <hr class="o-rule o-rule--15"> #}
+                            </div>
+                            <div class="col-12 c-page__container">
+                                {{page.content | raw}}
+                            </div>
+                        </div>
+                        
+                        
+                        {% if config['forms'][this.title] is defined %}
+                            {{ this.render('partials/form.twig', {
+                                page   : this.title,
+                                config : config
+                            }) | raw }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="j-keyword-cont" data-keywords="{{page.keywords}}"></div>
+    </div>
+</main>

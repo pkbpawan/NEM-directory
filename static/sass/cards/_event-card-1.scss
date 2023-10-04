@@ -1,0 +1,132 @@
+@mixin event-card-1-base{
+    @include base-event-card();
+    .c-eventcards-view{
+        
+        &__datetime{
+            display: none;
+        }
+        &__time-venue{
+            display: none;
+        }
+        
+        
+    }
+
+    
+}
+
+.event-card-1 {
+    
+    &__mobile{
+        @media #{$mobile}{
+            @include event-card-1-base();
+            .c-eventcards-view{
+                padding-bottom: 30px;
+                &__media{
+                    @include flex-width(91px);
+                    @include flex-height(77px);
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+                &__container{
+                    width: 100%;
+                    margin: 0;
+                }
+                &__info{
+                    // padding: 0;
+                }
+                &__time{
+                    // margin-bottom: 30px;
+                }
+                &__author {
+                    border: none;
+                    padding: 0;
+                    &__name{
+                        margin-left: 5px;
+                    }
+                }
+                
+            }
+        }
+    }
+
+    @mixin event-card-1-tablet-base{
+        @include event-card-1-base();
+        .c-eventcards-view{
+            &__media{
+                @include flex-width(195px);
+                @include flex-height(143px);
+                
+            }
+            &__container {
+                @include margin-left(20);
+                @include padding-right(0);
+                @include calc(width, '100% - 254px');
+            }
+        }
+        .without-image{
+            .c-eventcards-view{
+    
+                &__info{
+                    padding-bottom: 35px;
+                }
+                &__container{
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    
+    &__tablet{
+        @media #{$tablet}{
+            @include event-card-1-tablet-base();
+            .c-eventcards-view{
+                
+            }
+        }
+    }
+
+    &__desktop{
+        @media #{$desktop}{
+            @include event-card-1-tablet-base();
+            .c-eventcards-view{
+                
+            }
+        }
+    }
+    &__desktop-lg{
+        @media #{$desktop-lg}{
+            @include event-card-1-tablet-base();
+            .c-eventcards-view{
+                &__media{
+                    @include flex-width(195px);
+                    @include flex-height(143px);
+                    
+                    
+                }
+                &__day{
+                    display: none;
+                }
+                &__time{
+                    display: none;
+                }
+                &__datetime{
+                    display: block;
+                }
+            }
+            &.without-image{
+                .c-eventcards-view{
+        
+                    &__info{
+                        padding-bottom: 35px;
+                    }
+                    &__container{
+                        margin: 0;
+                    }
+                }
+            }
+        }   
+    }
+}

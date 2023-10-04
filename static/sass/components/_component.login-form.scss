@@ -1,0 +1,64 @@
+.c-login-modal {
+    margin-top: 20px;
+    position: relative;
+
+    &__title {
+        @include font-size(22);
+        text-align:left;
+        font-weight: $weightRegular;
+        margin-bottom:28px;
+
+    }
+
+
+    &__password-link {
+        @include font-size(11);
+        color:$grey-3;
+        font-style:italic;
+        text-align: right;
+        display: block;
+        margin-top: 7px;
+    }
+
+    &__subaction {
+        @include font-size(11);
+        margin-top:15px;
+
+    }
+
+    &__error {
+        color: $blackred;
+        margin-top:10px;
+    }
+
+    .password_toggler {
+        position: absolute;
+        right: 15px;
+        top: 49px;
+    
+        .icon-eye {
+            background-image: url('../icons/icon-eye-slash.svg');
+            width: 24px;
+            height: 13px;
+            display: block;
+        }
+
+        &.active {
+            .icon-eye {
+                background-image: url('../icons/icon-eye.svg');
+            }
+        }
+
+    }
+
+
+    &__google {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+}
+
+a.c-login-modal__password-link {
+    text-decoration: underline;
+}

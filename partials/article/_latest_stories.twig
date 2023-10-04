@@ -1,0 +1,16 @@
+<div class="c-articleLatest">
+<h3>Latest Stories</h3>
+    <div class="row">
+        {% set recentArticles = _Article.getRecentArticles({ limit: 5, excludeArticleIds : [article.id] }) %}
+        {% for i in 0..3 if recentArticles[i] %}
+            <div class="col-12">
+                {{this.render('../_single-article.twig', {
+                    article: recentArticles[i], 
+                    imageSize: {width: 300, height: 180},
+                    containerClass: 'card-16-mobile card-16-tablet card-16-desktop card-16-desktop-lg',
+                    site:   site
+                }) | raw}}
+            </div>
+        {% endfor %}
+    </div>
+</div>

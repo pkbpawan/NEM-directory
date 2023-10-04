@@ -1,0 +1,30 @@
+.c-digital-edition{
+
+
+    &__button{
+        @media #{$desktop-up}{
+            display: block;
+            position: absolute;
+            top: 364px;
+            left: 53px;
+            z-index: 100;
+        }
+        @media #{$tablet}{
+            display: block;
+            position: absolute;
+            bottom: 75px;
+            left: 40px;
+            z-index: 100;
+        }
+        @media #{$mobile}{
+            display: block;
+            position: absolute;
+            bottom: 63px;
+            left: 30px;
+            z-index: 100;
+            min-width:100px;
+            height:35px;
+        }
+
+    }
+}

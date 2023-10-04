@@ -1,0 +1,365 @@
+.c-header-4 {
+    padding: 0 0 12px 0;
+    // border-bottom: 1px solid $offwhite;
+    z-index:20;
+    position:relative;
+    background:white;
+
+    @media #{$desktop-lg} {
+        padding:0;
+    }
+
+    @media #{$tablet-desktop} {
+        padding: 15px 0 0;
+    }
+    @media #{$mobile} {
+        padding: 15px 0 0;
+    }
+
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // this row is weather and date for tablet and up
+    // but login and weather for mobile, so not easily named
+    &__row2 {
+        @include flexbox();
+        @include flex-direction(row, horizontal);
+        @include align-items(center);
+        order:2;
+    }
+
+
+    &__mobile-login {
+        flex:2;
+        @include font-size(14);
+
+    }
+    
+
+    &__mobile-subscribe {
+        order:3;
+        height: 25px;
+        @include font-size(13);
+        font-weight:$weightBold;
+        line-height:25px;
+        background: $mainColor;
+        color:white;
+        text-align:center;
+        width: calc(100% + 40px);
+        margin-left: -20px;
+        >a{
+            text-decoration: none;
+            color:white;
+            &:hover{
+                color: $white;
+            }
+        }
+        @media #{$tablet-up} {
+            display:none;
+        }
+        
+    }
+    
+
+    &__weather-info {
+        margin: 0;
+        @include flexbox();
+        @include flex-direction(row, horizontal);
+        @include align-items(flex-end);
+        @include justify-content(flex-start);
+        
+        
+        @media #{$desktop-lg}{
+            margin: -20px 0 0;
+            position: absolute;
+            right: 30px;
+        }
+        @media #{$tablet-desktop}{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        @media #{$desktop}{
+            right: 25px;
+        }
+
+        &--date {
+            @include font-size(13);
+            letter-spacing: 0.2px;
+            color: $grey-4;
+            font-weight: $weightRegular;
+            max-width: max-content;
+            min-width: max-content;
+            margin: 0;
+            position: relative;
+            @media #{$desktop-lg}{
+                margin: -15px 0 0;
+            }
+
+            @media #{$tablet-desktop}{
+                padding: 15px 0;
+            }
+            @media #{$desktop}{
+                margin: 0 auto;
+
+            }
+
+            @media #{$desktop-lg-down} {
+                height: 50px;
+            }
+        }
+        >.weather-dropdown{
+            right: -15px;
+        }
+    }
+
+
+    
+
+
+    &__login-info {
+        order:3;
+
+        @include flexbox();
+        @include flex-direction(row, horizontal);
+        @include align-items(center);
+        @include justify-content(flex-end);
+        max-width:220px;
+        min-width:220px;
+
+        z-index: 9;
+        @media #{$tablet-desktop}{
+            position:absolute;
+            top: -10px;
+            right: 0;
+        }
+
+        @media #{$mobile} {
+            position:absolute;
+            top:70px;
+            right:15px;
+        }
+        @media #{$desktop-lg}{
+            width: 25%;
+            max-width: 25%;
+            min-width: 25%;
+        }
+    }
+
+
+    &__main-info {
+        // @include flexbox();
+        // @include align-items(center);
+        // @include justify-content(space-between);
+        // order:4;
+        // position: relative;
+        // height:82px;
+        // width: 100%;
+        // margin-left: 0;
+
+        // @media #{$tablet}{
+        //     flex-wrap:wrap;
+        //     margin-top:20px;
+        // }
+        
+
+        &__logo {
+            flex-grow:2;
+            order:2;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            z-index: 10;
+            max-width:600px;
+
+            @media #{$tablet-desktop}{
+                order:3;
+                flex-grow:1;
+                max-width:300px;
+            }
+    
+
+            @media #{$desktop-lg-down}{
+                margin-left: 0;
+            }
+            @media #{$mobile}{
+                margin: 0;
+                max-width: max-content;
+                &--fixed{
+                    margin: 15px;
+                }
+            }
+
+            &.farmer-news{
+                max-width:800px;
+
+                @media #{$tablet-desktop}{
+                    max-width:500px;
+                }
+                @media #{$mobile}{
+                    max-width: max-content;
+                }
+    
+            }
+            
+
+        }
+        &__figure{
+            width: 100%;
+            display: block;
+            @media #{$mobile}{
+                width: 75%;
+            }
+            
+            >img{
+                height: 54px;
+                display: block;
+                margin: auto;
+                max-width: max-content;
+                object-fit: contain;
+                @media #{$mobile}{
+                    height: 28px;
+                    margin: auto 0;
+                }
+                @media #{$tablet-desktop}{
+                    margin-left: 0;
+                    max-width: 100%;
+                    height: unset;
+                    height: 45px;
+                    
+                }
+
+                @media #{$desktop-lg}{
+                    max-width: 100%;
+                    
+                }
+
+                &.farmer-news{
+                    height: 72px;
+    
+                    @media #{$tablet-desktop}{
+                        height: 60px;
+                    }
+                    @media #{$mobile}{
+                        height: 28px;
+                    }
+        
+                }
+                
+                
+    
+                
+            }
+            &--fixed{
+                max-width: 300px;
+                margin-left: 15px;
+                @media #{$mobile}{
+                    margin-left: 0;
+                }
+                >img{
+                    height: 44px;
+                    @media #{$tablet-desktop}{
+                        margin-top: 5px;
+                    }
+                    @media #{$mobile}{
+                        height: 40px;
+                        max-width: 100%;
+                        object-fit: contain;
+                    }
+                }
+            }
+        }
+
+    }
+
+    &__fixed{
+        display:block;
+        width: 100%;
+        position: fixed;
+        z-index: 999;
+        background-color: white;
+        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.28);
+        left: 0;
+        -webkit-transition: top 0.5s; /* Safari */
+        transition: top 0.5s;
+        z-index: 999999999;
+        @media #{$desktop-lg}{
+            // height: 75px;
+            top: -150px;
+            &--on{
+                top: 0;
+            }
+        }
+        @media #{$desktop-lg-down}{
+            height: 60px;
+            top: -65px;
+            &--on{
+                top: 0;
+            }
+            &-block{
+                margin: 0;
+                border-bottom: none;
+            }
+        }
+
+        >.c-header-4__main-info {
+            
+            @media #{$desktop-lg}{
+                @include flex-direction(column, vertical);
+                margin-top:10px;
+            }
+
+
+            @media #{$tablet-desktop}{
+                flex-wrap:unset;
+                @include align-items(center);
+                @include justify-content(flex-start);
+                height:100%;
+            }
+
+            @media #{$mobile}{
+                flex-wrap:unset;
+                @include align-items(center);
+                @include justify-content(flex-start);
+                height:100%;
+            }
+
+            
+
+        }
+
+        >.c-header-4__main-info>.c-header-4__main-info__logo {
+            @media #{$desktop-lg}{
+                max-width:none;
+                order:unset;
+                width: max-content;
+                margin: 0;
+            }
+        }
+    }
+    &__whitestrip{
+        width: 100%;
+        height: 55px;
+        position: absolute;
+        background-color: white;
+        margin-top: -10px;
+        // border-top: $grey-7 1px solid;
+
+        @media #{$mobile}{
+            display: none;
+        }
+    }
+
+    &__main-nav{
+        @media #{$desktop-lg}{
+            border-top: 2px solid $black;
+            border-bottom: 1px solid $black;
+            padding-bottom: 12px;
+            margin-top: 10px;
+        }
+    }
+    
+}

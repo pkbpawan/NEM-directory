@@ -1,0 +1,654 @@
+{% import "partials/quotes.twig" as quotes %}
+{{ set(this, 'title', article.title) }}
+{{ this.registerLinkTag({rel:'amphtml', href:_AppHelper.getServerUrl(false)~'?amp=1'}) }}
+
+
+{% set networkData  = _Network.getNetworkData() %}
+{% set blogInfo     = _Blog.getBlog(null, {'excludeMenus' : true}) %}
+{% set config       = _Network.getThemeConfig() %}
+{% set guestUser        = _User.isGuest() %}
+
+{% set articleBlog = article.blog.title | lower %}
+
+{% set articleBlogInfo = _Blog.getBlog({'guid':article.blog['guid']}) %}
+
+{% set purchasable = config.page.photos.site_cart is defined ? config.page.photos.site_cart : false %}
+
+{% set showPaywall = false %}
+{% set ArticleContent = article.content %}
+
+{% set pwstats = {} %}
+{% if not guestUser %}
+    {% set pwstats = _User.getPaywallStats(false) %}
+{% endif %}
+
+{% set allowedReferrers = config['allowedReferrers'] %}
+{% set headers      = _AppHelper.getHttpHeaders() %}
+
+{% set bypassPaywall = false %}
+{% if headers['referer'][0] is defined and allowedReferrers is defined %}
+{% set referrrer = headers['referer'][0] | preg_replace('|http(s)*://(.+?)/.*$|', '$2') %}
+    {% for ar in allowedReferrers %}
+        {% if referrrer == ar %}
+            {% set bypassPaywall = true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+
+{% set paywallType = "" %}
+{% if not _User.isAdminUser() and article.showPaywall == true %}
+    {% if bypassPaywall == false %} 
+        {% set showPaywall = true %}
+    {% endif %}
+
+    {# DETERMINE IF PAYWALL IS 'PAID' OR 'FREE' #}
+    {% if articleBlogInfo['paywallAllowSignupOnly'] == true %}
+        {# TURN FREE PAYWALL OFF FOR LOGGED IN USERS AND SET FREE PAYWALL TO SHOW #}
+        
+        {% if not _User.isGuest() %}
+            {% set showPaywall = false %}
+        {% else %}
+            {% set paywallType = "signup" %}
+        {% endif %}
+
+        
+    {% else %}
+        {# DETERMINE WHICH PAYWALL TO SHOW #}
+        {% if not _User.isGuest() %}
+
+            {% if pwstats['type'] == 'article' %}
+                {% set paywallType = "topup" %}
+            {% elseif pwstats['type'] == 'time' %}
+                {% set paywallType = "renew" %}
+            {% else %}
+                {% set paywallType = "upgrade" %}
+            {% endif %}
+
+        {% else %}
+            {% set paywallType = "subscribe" %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% set isPublisherPaywalled = showPaywall %}
+{% set reason = article.showPaywallReason is defined ? article.showPaywallReason : "" %}
+
+{% set extAccess = false %}
+{% set isGaa = false %}
+{% if config.extended_access is defined and config.extended_access.active is defined and config.extended_access.active != false %}
+    {% set extAccess = true %}
+    {% set isGaa = _User.isGaa() %}
+{% endif %}
+
+
+{% set ExtAccessIntegration = [] %}
+{% if extAccess and showPaywall and isGaa  %}
+
+    {% set ExtAccessIntegration = _Integration.get({name:'GoogleSignin'}) %}
+
+    {% if not guestUser %}
+        {% set showcase = false %}
+
+        {% if ExtAccessIntegration.client_id is defined and ExtAccessIntegration.publication_id is defined %}
+
+            {% set client_id = ExtAccessIntegration.client_id %}
+
+            {% set showcaseResponse = _User.checkShowcaseAccess(ExtAccessIntegration.publication_id, article) %}
+            {% if showcaseResponse.success == 1 and showcaseResponse.entitlement is defined and showcaseResponse.entitlement != false %}
+                {% set showcase = showcaseResponse.entitlement %}
+                {% set showPaywall = false %}
+            {% endif %}
+        {% endif %}
+
+    {% endif %}
+{% endif %}
+
+
+{% set trialToggle = false %}
+
+{% if showPaywall == true %}
+    {# {% set storySplit = ArticleContent | split('<p>')  %}
+    {% set para2_words = storySplit[2] | split(' ') | slice(0, 10) %}
+    {% set para2 = para2_words | join(' ') ~ '</p>'  %}
+    {% set ArticleContent = '<p>' ~ [storySplit[1], para2] | join('<p>') %} #}
+
+    {% set storySplit = ArticleContent | split('</p>')  %}
+    {% set para2      = storySplit[1] | slice(0, 80) ~ '</p>'  %}
+    {% set ArticleContent  = [storySplit[0], para2] | join('</p>') %}
+
+    {% set plans = _Paywall.getActiveNetworkPaywallPlans() %}
+
+    {% for plan in plans  %}
+        {% if plan.trial_status == "1" %}
+            {% set trialToggle = true %}
+        {% endif %}
+    {% endfor %}
+
+{% else %}
+    {# Only grab these if article is not paywalled #}
+    {% if config['inventory']['articleAd'] is defined %}
+        {% set adPos = config['inventory']['articleAd']  %}
+        
+        {% set storySplit = ArticleContent | split('<p>')  %}
+
+        {% if storySplit[(adPos['position'] * 2) - 1] %}
+            {% if adPos['slot'] is defined %}
+                {% set inarticleslot = adPos['slot'] %}
+                {% set ArticleContent = '<p>' %}
+                {% for para in storySplit %}
+                    {% set ArticleContent = ArticleContent ~ '<p>' ~ para %}
+                    {% if loop.index == adPos['position'] %}
+                        {% set ArticleContent = ArticleContent ~ '<div class="u-margin-top-30 u-margin-bottom-30 '~ adPos['class'] ~'"><div class="j-adslot" id="' ~ inarticleslot ~ '" data-adshape="banner"></div></div>' %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if storySplit | length > 10 %}
+                {% set ArticleContent = '<p>' %}
+                {% for para in storySplit %}
+                    {% set ArticleContent = ArticleContent ~ '<p>' ~ para %}
+                    {% set mazz = true %}
+                    
+                    {% if loop.index == 6 %}
+                        {% set ArticleContent = ArticleContent ~ this.render('partials/article/_latest_stories.twig') | raw %}
+                    {% endif %}
+
+                    {% if loop.index == 11 %}
+                        {% set ArticleContent = ArticleContent ~ this.render('partials/article/_subscribe.twig') | raw %}
+                    {% endif %}
+                {% endfor %}
+            {% elseif storySplit | length > 5 %}
+                    {% set ArticleContent = '<p>' %}
+                    {% for para in storySplit %}
+                        {% set ArticleContent = ArticleContent ~ '<p>' ~ para %}
+                        {% if loop.index == 6 %}
+                            {% set ArticleContent = ArticleContent ~ this.render('partials/article/_latest_stories.twig') | raw %}
+                        {% endif %}
+                    {% endfor %}
+            {% endif %}
+
+        {% else %}
+
+            {% if storySplit | length > 10 %}
+                {% set ArticleContent = '<p>' %}
+                {% for para in storySplit %}
+                    {% set ArticleContent = ArticleContent ~ '<p>' ~ para %}
+                    {% if loop.index == 6 %}
+                        {% set ArticleContent = ArticleContent ~ this.render('partials/article/_latest_stories.twig') | raw %}
+                    {% endif %}
+
+                    {% if loop.index == 11 %}
+                        {% set ArticleContent = ArticleContent ~ this.render('partials/article/_subscribe.twig', {
+                                config:config, 
+                                networkData: networkData
+                            }) | raw %}
+                    {% endif %}
+                {% endfor %}
+            {% elseif storySplit | length > 5 %}
+                    {% set ArticleContent = '<p>' %}
+                    {% for para in storySplit %}
+                        {% set ArticleContent = ArticleContent ~ '<p>' ~ para %}
+                        {% if loop.index == 6 %}
+                            {% set ArticleContent = ArticleContent ~ this.render('partials/article/_latest_stories.twig') | raw %}
+                        {% endif %}
+                    {% endfor %}
+            {% endif %}
+            
+        {% endif %}
+    {% endif %}
+    
+{% endif %}
+
+
+{% set recentArticles = _Article.getRecentArticles({ limit: 5, excludeArticleIds : [article.id] }) %}
+{% set popularArticles = _Article.getPopularArticles({ limit: 5, scope: 'network', excludeArticleIds : [article.id],  interval: 168 }) %}
+
+
+{% set watermark = false %}
+{% if config['watermark']['settings'] is defined and config['watermark']['sections'][articleBlog|lower] is defined %}
+    {% set watermark = config['watermark']['settings'] %}
+{% endif %}
+
+
+
+
+{% set articleImg = false %}
+{% set featured = false %}
+{% if article.media|length > 0 %}
+    {% set articleImg = true %}
+    {% set featured = article.media[0].type %}
+{% endif %}
+
+
+
+{% set profileImg = _Media.getMediaUrl(article.createdBy['media'], 100, 100, {radius: 'max', gravity: 'face', 'crop': 'thumb', type: 'user'}) %}
+{% set publishDate = _AppHelper.getDefaultTimezoneDateTime(article.publishDate, 'F, Y') %}
+{% set updateDate = _AppHelper.getDefaultTimezoneDateTime(article.updatedDateTime,'F j, Y') %}
+
+
+{% set updated = false %}
+{% if article.publishedDateTime != article.updatedDateTime %}
+    {% set updatedAgo = _AppHelper.getSecondsSincePublished(article.updatedDateTime) %}
+    {% if updatedAgo < 86400 %}
+        {% set updateDate = _AppHelper.getRelativeTime(article.updatedDateTime) ~ " ago" %}
+    {% endif %}
+    {% set updated = true %}
+{% endif %}
+
+
+
+<main id="main" class="o-body-container o-body-container-md u-margin-top-60 u-mobile-no-margin-top" role="main" data-paywall-type="{{paywallType}}">
+    <article itemprop="mainEntityOfPage" itemscope itemtype="http://schema.org/NewsArticle">
+        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+            <meta itemprop="name" content="{{networkData.title}}">
+            <meta itemprop="image" content="{{article.media[0].path}}" />
+            <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+                <meta itemprop="url" content="{{networkData.templatePath}}/static/images/logo.svg">
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-12 col-xl-8 j-article-container">
+
+                    <div class="c-article c-article-sm" >
+                        <div class="c-article__main">
+                            <div class="c-article__head">
+                                
+                                {% if _User.isAdminUser() %}
+                                        <a href="{{article.editUrl}}" target="_blank" class="c-article__edit-link">Edit article</a>
+                                {% endif %}
+
+
+                                <div class="c-article__category">
+                                    {{article.label}}
+                                </div>
+                                <div itemprop="headline" class="c-article__title">
+                                    {{ quotes.smarten(article.title) }}
+                                </div>
+                                <div class="c-article__posted-on" itemprop="datePublished">
+                                    <time class="c-article__published" content="{{article.publishedDate}}">{{article.publishedDate}}</time>
+                                    {% if updated %}
+                                        <time class="c-article__updated" content="{{ updateDate | capitalize }}">Updated {{ updateDate | capitalize }}</time>
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-12">    
+                                        <div class="c-article__posted-by">
+                                            <div class="c-article__author">
+                                                <div class="c-article__author--info">
+                                                    <div  class="c-article__author" itemscope itemprop="author" itemtype="https://schema.org/Person">
+                                                        <meta itemprop="name" content="{{article.createdBy['displayName']}}">
+                                                        <div class="c-article__avatar"  style="background-image: url({{ profileImg }});"></div>
+                                                        {% if config['hide-author'] is defined and config['hide-author'] %}
+                                                            <p  class="c-article__author-name">{{ article.createdBy['displayName'] }}</p>
+                                                        {% else %}
+                                                        
+                                                            <a itemprop="url" href="{{_AppHelper.getUserProfileUrl(article.createdBy['username'])}}/posts">{{ article.createdBy['displayName'] }}</a>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    {% if article['createdBy']['coauthors'] %}
+                                                        {% for author in article['createdBy']['coauthors'] %}
+                                                            <div class="c-article__author">
+                                                                <div class="c-article__avatar" style="background-image: url({{ _Media.getMediaUrl(author['media'], 100, 100, {radius: 'max', gravity: 'face', 'crop': 'thumb', type: 'user'}) }});"></div>
+                                                                {% if config['hide-author'] is defined and config['hide-author'] %}
+                                                                    <p class="c-article__author-name" >{{ author['displayName'] }}</p>
+                                                                {% else %}
+                                                                    <a class="c-article__author-name" href="{{_AppHelper.getUserProfileUrl(author['username'])}}/posts">{{ author['displayName'] }}</a>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="c-article__social w-auto">
+                                            
+                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{article.url}}" target="_blank" >
+                                                        <div class="c-article__social-icon c-article__social-icon--linkedin">
+                                                            {{ this.render('/partials/icons.twig', {icon: 'linkedin'} ) | raw }}
+                                                        </div>
+                                                    </a>
+                                                
+                                                    <a href="https://twitter.com/share?text={{ article.title|url_encode }}&url={{article.url}}" target="_blank">
+                                                        <div class="c-article__social-icon c-article__social-icon--twitter">
+                                                        {{ this.render('/partials/icons.twig', {icon: 'twitter'} ) | raw }}
+                                                        </div>
+                                                    </a>
+                                                
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{article.url}}&title={{ article.title|url_encode }}" target="_blank">
+                                                        <div class="c-article__social-icon c-article__social-icon--facebook">
+                                                        {{ this.render('/partials/icons.twig', {icon: 'facebook'} ) | raw }}
+                                                        </div>
+                                                    </a>
+
+                                                    <a href="mailto:?subject=Check%20out%20this%20article&body={{article.url}}" target="_blank" >
+                                                        <div class="c-article__social-icon c-article__social-icon--email">
+                                                            {{ this.render('/partials/icons.twig', {icon: 'email'} ) | raw }}
+                                                        </div>
+                                                    </a>
+
+                                                </div>
+                                
+                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        
+
+                            {% if articleImg %} 
+
+                                <div class="gallery-container relative">
+                                    {% set galleryStyle = 'article' %}
+                                    {% if article.media|length > 1 %}
+                                        {% set galleryStyle = 'gallery' %}
+                                    {% endif %}
+
+
+                                    {% if article.media|length > 0 %}
+
+                                    {% if article.media[0]['type'] != 'video' %}
+                                        <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject" >
+                                            <meta itemprop="url" content="{{ _Media.getMediaUrl(article.media[0], 0, 0, {'crop': 'fill', 'gravity': 'auto'} )}}">
+                                        </div>
+                                    {% endif %}
+
+                                        {% set imageFeature = featured == 'image' ? true : false %}
+                                        {{this.render('partials/gallery.twig', {
+                                            media: article.media,
+                                            default: imageFeature,
+                                            watermark: watermark,
+                                            galleryStyle: galleryStyle,
+                                            showPaywall: showPaywall,
+                                            purchasable: purchasable
+                                        }) | raw}}
+                                    {% endif %}
+
+                                </div> 
+
+                            {% endif %}
+
+                            <div class="c-article__container c-article__container-sm" itemprop="articleBody">
+                                    {{ ArticleContent | _resizeImages({'width': 600}) | raw }}
+                            </div>
+
+
+
+                            {% if showPaywall == true %}
+                                {{this.render('partials/article/paywall_article_notice.twig', {networkData:networkData, paywallType:paywallType}) | raw}}
+                            {% endif %}
+
+                        </div>
+
+                        {% if showPaywall == false %}
+                            <!-- Disqus Comment Added -->
+                            {% if networkData.thirdPartyIntegrations['disqus'] | length > 0 and networkData.thirdPartyIntegrations['disqus']['shortName'] != '' %}
+                                {{this.render("partials/article/_disqus_comments.twig", {disqus: networkData.thirdPartyIntegrations['disqus'], userId: article.createdBy['id'], url:article.url, articleId: article.id}) | raw}}
+                            {% endif %}
+                        {% endif %}
+
+
+                    </div>
+                    <!-- End Article Page -->
+                </div>
+                <div class="col-12 d-none d-xl-block offset-xl-1 col-xl-3 u-border-left j-article-sidebar">
+                    <div class="advertisment__side-fix-1" style="height:max-content;" id="side-fix-1">
+                        <div class="row">
+                            <div class="col-12">
+                                {% if config['inventory']['adSpace']['mrec'][0] is defined %}
+                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['mrec'][0]}}" data-adshape="mrec"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 u-margin-top-30">
+                                <div class="c-page-head c-page-head-xs c-page-head__subhead">
+                                    <div class="u-heading__medium">Most Popular</div>
+                                    
+                                </div>
+                            </div> 
+                            <div class="col-12">
+                                <ul class="row c-news-feed__list">
+                
+                                    {% for i in 0..4 if popularArticles[i] %}
+                                        <li class="col-12 col-md-4 col-xl-12{% if i < 2 %} u-tablet-border-right {% elseif i > 2 %} d-md-none{% endif %}">
+                                            {{this.render('/partials/_single-article.twig', {
+                                                article: popularArticles[i], 
+                                                containerClass: "card-14-mobile card-14-tablet card-14-desktop card-14-desktop-lg",
+                                                imageSuppress: true
+                                            }) | raw}}
+                                        </li>
+                                        
+                                        {% if i < 2 %}
+                                            <div class="col-12 d-md-none d-xl-block">
+                                                <hr class="o-rule o-rule--15">
+                                                {# <hr class="o-rule d-md-block"> #}
+                                            </div>
+                                        {% elseif i < 4 %}
+                                            <div class="col-12 d-md-none">
+                                                <hr class="o-rule o-rule--15">
+                                                {# <hr class="o-rule d-md-block"> #}
+                                            </div>
+                                        {% endif %}
+                                        
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-12 u-margin-top-30">
+                                {% if config['inventory']['adSpace']['mrec'][1] is defined %}
+                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['mrec'][1]}}" data-adshape="mrec"></div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% if showPaywall == false %}
+                <div class="row c-related-articles u-desktop-margin-top-100">
+                    <div class="col-12">
+                        <div class="c-page-head c-page-head-xs">
+                            <div class="u-heading__large u-heading__large-xs u-pr--6">Latest Stories</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="row">
+                            {% for i in 0..3 if recentArticles[i] %}
+                                <div class="col-12 col-md-4 col-lg-3{% if i == 3 %} d-md-none d-lg-block {% elseif i < 2 %} u-tablet-border-right u-desktop-border-right u-desktop-lg-border-right{% else %} u-desktop-lg-border-right{% endif %}">
+                                    {{this.render('partials/_single-article.twig', {
+                                        article: recentArticles[i], 
+                                        imageSize: {width: 300, height: 180},
+                                        containerClass: 'card-2-mobile card-4-tablet card-4-desktop card-4-desktop-lg',
+                                        site:   site
+                                    }) | raw}}
+                                </div>
+                                {% if i < 3 %}
+                                    <hr class="o-rule o-rule--15 d-md-none">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+
+
+
+        </div>
+    </article>
+    {% set theKeywords = '' %}
+    {% if article.keywords is defined and article.keywords != '' %}
+        {% set theKeywords = article.keywords %}
+    {% elseif blogInfo.keywords is defined and blogInfo.keywords != '' %}
+        {% set theKeywords = blogInfo.keywords %}
+    {% endif %}
+    <div class="j-keyword-cont" data-keywords="{{theKeywords}}"></div>
+</main>
+
+<script>
+    // main script is defered so event listener makes sure
+    // defered script is loaded before this runs
+    document.addEventListener("DOMContentLoaded", function(event) {
+        Acme.articleController = Acme.ArticleController();
+    });
+</script>
+
+
+
+{% set isPaywalled = article.premiumContent ? 'false' : 'true' %}
+
+{% if ExtAccessIntegration.publication_id is defined %}
+<script type="application/ld+json">
+{
+        "@context": "http://schema.org",
+        "@type": "NewsArticle",
+        "isAccessibleForFree": {{isPaywalled}},
+        "isPartOf": {
+            "@type": ["CreativeWork", "Product"],
+            "name": "{{networkData.title}}",
+            "productID": "{{ExtAccessIntegration.publication_id}}:showcase"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "{{networkData.title}}"
+        }
+}
+</script>
+{% endif %}
+
+{% set user = false %}
+{% set userCreatedAt = "" %}
+{% set userGuid = "" %}
+
+{# Registered user with access through the publisher subscription #}
+{% if not guestUser %}
+    {% set user = _User.getUser() %}
+    {% if user.userCreated is defined %}
+        {% set userCreatedAt = user.userCreated %}
+    {% elseif user.created_at is defined %}
+        {% set userCreatedAt = user.created_at %}
+    {% endif %}
+
+    {% set userGuid = user.guid %}
+{% endif %}
+
+{% set isPremium = article.premiumContent %}
+
+
+{% if isGaa and ExtAccessIntegration.client_id is defined and ExtAccessIntegration.publication_id is defined %}
+
+<script  subscriptions-control="manual" src="https://news.google.com/swg/js/v1/swg.js"></script>
+<script  src="https://news.google.com/swg/js/v1/swg-gaa.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+
+        let isPremium = "{{isPremium}}" == 1 ? true : false;
+        let paywalled = "{{showPaywall}}" == 1 ? true: false;
+        let publisherGranted = "{{isPublisherPaywalled}}" == true ? false : true;
+        let guestUser = "{{guestUser}}" == 1 ? true : false;
+        let articleId = "{{article.id}}";
+
+        
+        window.userState = {
+            granted: false
+        };
+
+        if (isPremium && publisherGranted && !guestUser) {
+            window.userState = {
+                id: "{{userGuid}}",
+                registrationTimestamp: parseInt("{{userCreatedAt}}"),
+                subscriptionTimestamp: parseInt("{{userCreatedAt}}"),
+                granted: publisherGranted,
+                grantReason: "SUBSCRIBER"
+            };
+        }
+
+
+
+        // Registered user with no access #}
+        // if paywalled and not guestUser %}
+        if (!publisherGranted && !guestUser) {
+            window.userState = {
+                id: "{{user.guid}}",
+                registrationTimestamp: parseInt("{{userCreatedAt}}"),
+                granted: false,
+            };
+        }
+
+
+        let handleLoginPromise = new Promise((resolve) => {
+            GaaMetering.getLoginPromise().then(() => {
+                GaaMeteringRegwall.remove();
+                window.loadSigninForm();
+            });
+        });
+
+        let unlockArticle = function() { }
+
+        let registerUserPromise = new Promise((resolve) => {
+            GaaMetering.getGaaUserPromise().then((gaaUser) => {
+                var postData = {
+                    "article_id": articleId,
+                    "user": JSON.stringify(gaaUser),
+                    "url" : window.location.href,
+                };
+
+                Acme.server.create('/auth/extended-access-signup', postData ).done(function(r) {
+                    if (r.success == 1) {
+                        window.userState.id = r.user_id;
+                        window.userState.registrationTimestamp = r.registration;
+                        window.userState.granted = true;
+                        resolve(window.userState); 
+                        location.reload();
+                        return;
+                    }
+                });
+            });
+        });
+
+        let publisherEntitlementPromise = new Promise((resolve) => {
+            // Get the information for the user who has just registered.
+            resolve(window.userState);
+        });
+
+        let showPaywall = function() {
+            var link = _appJsConfig.baseHttpPath + '/user/edit-profile';
+            const loginWindow = window.open(link);
+            return;
+        };
+
+        var showcaseEntitlement = "{{showcase}}";
+
+        var initData = {
+            googleApiClientId: "{{ExtAccessIntegration.client_id}}", 
+            userState: window.userState,
+            handleLoginPromise: handleLoginPromise,
+            registerUserPromise: registerUserPromise,
+            publisherEntitlementPromise: publisherEntitlementPromise,
+            unlockArticle: unlockArticle,
+            showPaywall: showPaywall,
+            allowedReferrers: ["{{networkData.defaultDomain.domain}}", "nemwangtest.publish.net.au", "nemnews.cognitives.link", "www.parent.io"],
+        };
+
+        if (showcaseEntitlement) {
+            initData['showcaseEntitlement'] = showcaseEntitlement;
+        }
+        console.log(initData);
+        GaaMetering.init(initData);
+    });   
+
+</script>
+{% endif %}
+
+

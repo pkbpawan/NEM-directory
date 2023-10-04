@@ -1,0 +1,69 @@
+/* Begin page head style */
+.purchase-plans {
+    padding:20px;
+    // height:100%;
+    border-radius: 2px;
+    background-color: $grey-7;
+    text-align: center;
+    border-top: 7px solid $mainColor;
+
+    &__name {
+        color:$black;
+        @include font-size(28);
+        @include flex-height(66px);
+        @include margin-bottom(14);
+        font-weight: 600;
+        text-align: center;
+    }
+    &__users {
+        @include font-size(18);
+        text-align: center;
+    }
+    &__price {
+        @include font-size(30);
+        @include margin-top(20);
+        @include margin-bottom(40);
+        font-weight: $weightLight;
+        color: $mainColor;
+    }
+
+
+    &__details {
+        list-style:none;
+        @include margin(0);
+        @include padding(0);
+        @include margin-bottom(15);
+        width: 100%;
+        
+        li {
+            color: $grey-3;
+            position: relative;
+            @include font-size(16);
+            font-weight:$weightRegular;
+            line-height: 1.47;
+            @include padding(10 15 10 50);
+            //border-bottom: 1px solid rgba($grey-3,0.3);
+            text-align: left;
+            &:last-child {
+                border-bottom: 0px none;
+            }
+            
+            &:before {
+                top: 17px;
+                left: 25px;
+                height: 12px;
+                width: 16px;
+                background-image: url('../icons/tick.svg');
+                color: $blue;
+                content:'';
+                position: absolute;
+                @include font-size(15);
+            }
+        }
+    }
+
+
+
+}
+
+

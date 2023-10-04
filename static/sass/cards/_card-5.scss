@@ -1,0 +1,264 @@
+@mixin card-5-base() {
+    @include card-name("C5 mobile");
+    .c-cards-view {
+
+
+        height: inherit;
+        align-items: stretch;
+
+        &__media {
+            @include flex-width(86px);
+            height: 114px;
+
+            &--video {
+                &:before {
+                    
+                }
+            }
+        }
+
+        &__container {
+            margin-left: 14px;
+            width:100%;
+            height: inherit;
+        }
+        &__category {
+            display: none;
+        }
+
+        &__heading {
+            @include flex-height(63px);
+            @include font-size(15);
+            margin-top: 36px;
+        }
+        &__author {
+            // margin-top: 12px;
+            position: absolute;
+            top: 12px;
+            padding-top: 0;
+        }
+
+        &__author-name {
+            font-size: 0;
+            letter-spacing: 0;
+        }
+        &__time {
+            @include font-size(10.5);
+            text-transform: uppercase;
+
+        }
+
+
+        &.social {
+            .social-icon {
+                @include size(30px);
+
+                &:before {
+                    @include font-size(13);
+                    line-height: 32px;
+                }
+            }
+
+            &.without-image {
+                .card {
+                    &__container {
+                        @include calc(width, '100% - 30px');
+                        margin-left: 30px;
+                        padding: 0 20px;
+                        margin: 15px 0;
+                        height: inherit;
+                    }
+                }
+            }
+        }
+
+
+        &.without-image {
+            background-color:$grey-7;
+
+            .c-cards-view {
+
+                &__container {
+                    width: 100%;
+                    padding: 50px 45px;
+                    margin-left: 0;
+                    height: inherit;
+                }
+            }
+        }
+    }
+}
+
+.card-5-mobile {
+    @media #{$mobile} {
+        @include card-5-base();
+    }
+}
+
+@mixin card-5-tablet-base() {
+
+    @include card-5-base();
+
+    .c-cards-view {
+        @include flex-direction(column, vertical);
+        &__media {
+            @include flex-width(100%);
+           height: 297px;
+
+            &--video {
+                &:before {
+                    @include size(40px);
+                }
+            }
+        }
+
+        &__category {
+            margin-top: 15px;
+            display: block;
+        }
+
+        &__container {
+            width: 100%;
+            margin: 0;
+        }
+
+        &__author {
+            position: relative;
+            margin-top: 10px;
+            padding-top: 0;
+            top: unset;
+        }
+
+        &__author-name {
+            @include font-size(9.5);
+            letter-spacing: 0.4px;
+        }
+
+        
+
+
+        &__heading {
+            @include font-size(24);
+            line-height: 1.25;
+            margin-top: 5px;
+        }
+
+        &__description {
+            @include font-size(13.5);
+            line-height: 1.33;  
+            display: block;  
+            @include flex-height(67px); 
+        }
+
+
+        &.social {
+            .social-icon {
+                @include size(50px);
+
+                &:before {
+                    @include font-size(22);
+                    line-height: 52px;
+                }
+            }
+
+            &.without-image {
+                .c-cards-view {
+                    &__container {
+                        @include calc(width, '100% - 50px');
+                        margin-left: 50px;
+                    }
+                }
+            }
+        }
+
+        &.without-image {
+
+            .c-cards-view {
+                
+                &__heading{
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+                    min-height: 63px;
+                }
+
+                &__description {
+                    display: block;
+                    height: 192px;
+                }
+                &__author {
+                    bottom: 30px;
+                    position: absolute;
+                }
+                &__author-name {
+                    
+                }
+               
+        
+                &__container {
+                    padding: 30px 25px;
+                    margin-left: 0;
+                    height: 488px;
+                }
+            
+            }
+        }
+    }
+}
+
+.card-5-tablet {
+    @media #{$tablet} {
+        @include card-5-tablet-base();
+        @include card-name("C5 tablet");
+    }
+}
+
+.card-5-desktop {
+    @media #{$desktop} {
+        @include card-5-tablet-base();
+        @include card-name("C5 desktop");
+    }
+}
+
+.card-5-desktop-lg {
+    @media #{$desktop-lg} {
+        @include card-5-tablet-base();
+        @include card-name("C5 desktop-lg");
+        .c-cards-view {
+            &__media {
+                @include flex-width(100%);
+                @include flex-height(361px);
+               
+    
+                &--video {
+                    &:before {
+                        @include size(40px);
+                    }
+                }
+            }
+
+            &__heading {
+                 @include flex-height(unset);
+                max-height: 75px;
+                margin-bottom: 10px;
+            }
+    
+            &__description {
+                @include font-size(14.5);
+                @include flex-height(73px); 
+            }
+
+            &.without-image {
+                
+                .c-cards-view {
+    
+                    &__container {
+                        width: 100%;
+                        padding: 50px 45px;
+                        margin-left: 0;
+                        height: 548px;
+                    }
+                }
+            }
+        }
+    }
+}
