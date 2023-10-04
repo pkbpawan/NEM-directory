@@ -182,6 +182,8 @@ Acme.View.articleFeed.prototype.render = function(data)
     self.elem.html(label);
     self.lessElem.show();
 
+    console.log(self.elem);
+
     // add counts to the dom for next request
     self.options.offset += self.options.limit;
     self.options.nonPinnedOffset = data.existingNonPinnedCount;
