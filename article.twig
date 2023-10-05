@@ -373,16 +373,19 @@
                     </div>
                     <!-- End Article Page -->
                 </div>
+                
                 <div class="col-12 d-none d-xl-block offset-xl-1 col-xl-3 u-border-left j-article-sidebar">
-                    <div class="advertisment__side-fix-1" style="height:max-content;" id="side-fix-1">
+                    <div class="advertisment__banner-head" style="height:max-content;" id="banner-head">
                         <div class="row">
                             <div class="col-12">
-                                {% if config['inventory']['adSpace']['mrec'][0] is defined %}
-                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['mrec'][0]}}" data-adshape="mrec"></div>
-                                {% endif %}
+                                
+                                    {% if config['inventory']['adSpace']['banner'][0] is defined %}
+                                        <div class="j-adslot" id="{{config['inventory']['adSpace']['banner'][0]}}" data-adshape="banner"></div>
+                                    {% endif %}
+                                    
                             </div>
                             
-                            
+                           
                             
                         </div>
                     </div>
