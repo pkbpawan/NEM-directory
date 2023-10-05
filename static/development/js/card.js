@@ -1,5 +1,5 @@
 var Card = function() {
-    this.events();
+    // /this.events();
 };
 
 Card.prototype.renderScreenCards = function(options, data) 
@@ -352,7 +352,7 @@ Card.prototype.bindSocialUpdatePost = function ()
     });
 };
 
-Card.prototype.bindLightbox = function()
+/* Card.prototype.bindLightbox = function()
 {
     var isRequestSent = false;
     var self = this;
@@ -430,7 +430,7 @@ Card.prototype.bindLightbox = function()
             });
         }
     });
-};
+}; */
 
 Card.prototype.initDraggable = function()
 {
@@ -577,7 +577,7 @@ Card.prototype.events_refresh = function()
     }
 };
 
-Card.prototype.events = function() 
+/* Card.prototype.events = function() 
 {
     this.bindLightbox();
 
@@ -588,4 +588,4 @@ Card.prototype.events = function()
         this.bindDeleteHideArticle();
         this.bindSocialUpdatePost();
     }
-};
+}; */
