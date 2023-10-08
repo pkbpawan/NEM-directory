@@ -267,7 +267,13 @@
                                 <div itemprop="headline" class="c-article__title">
                                     {{ quotes.smarten(article.title) }}
                                 </div>
-                                
+                                <div class="c-article__posted-on" itemprop="datePublished">
+                                    <time class="c-article__published" content="{{article.publishedDate}}">{{article.publishedDate}}</time>
+                                    {% if updated %}
+                                        <time class="c-article__updated" content="{{ updateDate | capitalize }}">Updated {{ updateDate | capitalize }}</time>
+                                    {% endif %}
+
+                                </div>
 
 
                                 <div class="row">
@@ -275,8 +281,29 @@
                                         <div class="c-article__posted-by">
                                             <div class="c-article__author">
                                                 <div class="c-article__author--info">
-                                                   
-                                                   
+                                                    <div  class="c-article__author" itemscope itemprop="author" itemtype="https://schema.org/Person">
+                                                        <meta itemprop="name" content="{{article.createdBy['displayName']}}">
+                                                        <div class="c-article__avatar"  style="background-image: url({{ profileImg }});"></div>
+                                                        {% if config['hide-author'] is defined and config['hide-author'] %}
+                                                            <p  class="c-article__author-name">{{ article.createdBy['displayName'] }}</p>
+                                                        {% else %}
+                                                        
+                                                            <a itemprop="url" href="{{_AppHelper.getUserProfileUrl(article.createdBy['username'])}}/posts">{{ article.createdBy['displayName'] }}</a>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    {% if article['createdBy']['coauthors'] %}
+                                                        {% for author in article['createdBy']['coauthors'] %}
+                                                            <div class="c-article__author">
+                                                                <div class="c-article__avatar" style="background-image: url({{ _Media.getMediaUrl(author['media'], 100, 100, {radius: 'max', gravity: 'face', 'crop': 'thumb', type: 'user'}) }});"></div>
+                                                                {% if config['hide-author'] is defined and config['hide-author'] %}
+                                                                    <p class="c-article__author-name" >{{ author['displayName'] }}</p>
+                                                                {% else %}
+                                                                    <a class="c-article__author-name" href="{{_AppHelper.getUserProfileUrl(author['username'])}}/posts">{{ author['displayName'] }}</a>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </div>
                                                 <div class="c-article__social w-auto">
                                             
@@ -373,21 +400,89 @@
                     </div>
                     <!-- End Article Page -->
                 </div>
-                
-                <div class="col-12 col-lg-4 d-none d-lg-block">
-                    <div class="h-100">
-                        <div class="ads-sticky">
-                            {% if config['inventory']['adSpace']['side-fix'][0] is defined %}
-                                <div class="mt-4">
-                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['side-fix'][0]}}" data-adshape="side-fix"></div>
+                <div class="col-12 d-none d-xl-block offset-xl-1 col-xl-3 u-border-left j-article-sidebar">
+                    <div class="advertisment__side-fix-1" style="height:max-content;" id="side-fix-1">
+                        <div class="row">
+                            <div class="col-12">
+                                {% if config['inventory']['adSpace']['mrec'][0] is defined %}
+                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['mrec'][0]}}" data-adshape="mrec"></div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 u-margin-top-30">
+                                <div class="c-page-head c-page-head-xs c-page-head__subhead">
+                                    <div class="u-heading__medium">Most Popular</div>
+                                    
                                 </div>
-                            {% endif %}
+                            </div> 
+                            <div class="col-12">
+                                <ul class="row c-news-feed__list">
+                
+                                    {% for i in 0..4 if popularArticles[i] %}
+                                        <li class="col-12 col-md-4 col-xl-12{% if i < 2 %} u-tablet-border-right {% elseif i > 2 %} d-md-none{% endif %}">
+                                            {{this.render('/partials/_single-article.twig', {
+                                                article: popularArticles[i], 
+                                                containerClass: "card-14-mobile card-14-tablet card-14-desktop card-14-desktop-lg",
+                                                imageSuppress: true
+                                            }) | raw}}
+                                        </li>
+                                        
+                                        {% if i < 2 %}
+                                            <div class="col-12 d-md-none d-xl-block">
+                                                <hr class="o-rule o-rule--15">
+                                                {# <hr class="o-rule d-md-block"> #}
+                                            </div>
+                                        {% elseif i < 4 %}
+                                            <div class="col-12 d-md-none">
+                                                <hr class="o-rule o-rule--15">
+                                                {# <hr class="o-rule d-md-block"> #}
+                                            </div>
+                                        {% endif %}
+                                        
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-12 u-margin-top-30">
+                                {% if config['inventory']['adSpace']['mrec'][1] is defined %}
+                                    <div class="j-adslot" id="{{config['inventory']['adSpace']['mrec'][1]}}" data-adshape="mrec"></div>
+                                {% endif %}
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
             </div>
-            
+            {% if showPaywall == false %}
+                <div class="row c-related-articles u-desktop-margin-top-100">
+                    <div class="col-12">
+                        <div class="c-page-head c-page-head-xs">
+                            <div class="u-heading__large u-heading__large-xs u-pr--6">Latest Stories</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="row">
+                            {% for i in 0..3 if recentArticles[i] %}
+                                <div class="col-12 col-md-4 col-lg-3{% if i == 3 %} d-md-none d-lg-block {% elseif i < 2 %} u-tablet-border-right u-desktop-border-right u-desktop-lg-border-right{% else %} u-desktop-lg-border-right{% endif %}">
+                                    {{this.render('partials/_single-article.twig', {
+                                        article: recentArticles[i], 
+                                        imageSize: {width: 300, height: 180},
+                                        containerClass: 'card-2-mobile card-4-tablet card-4-desktop card-4-desktop-lg',
+                                        site:   site
+                                    }) | raw}}
+                                </div>
+                                {% if i < 3 %}
+                                    <hr class="o-rule o-rule--15 d-md-none">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+
+
 
         </div>
     </article>

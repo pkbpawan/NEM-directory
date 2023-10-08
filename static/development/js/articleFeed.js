@@ -247,8 +247,7 @@ Acme.View.articleFeed.prototype.render = function(data)
         watch: true
     });
 
-    // self.elem.data('rendertype', '');
-    this.feedModel.events();
+
 };
 
 

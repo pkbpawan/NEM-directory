@@ -25,14 +25,15 @@
 </div>
 <div class="acme-row {{labelInfo}} {{noAuthor}}">
     {% for i in 0..2 if articles[i] %}
-        <div class="acme-col-12 acme-col-md-12 acme-col-lg-6">
+        <div class="acme-col-12 acme-col-md-12 acme-col-lg-4">
             {{this.render('../_single-article.twig', {
                 article: articles[articleCount], 
                 position: (articleCount+1),
                 cardType: "acme-",
                 imageSize: {width: 285, height: 192, gravity: 'north'},
                 gravity: 'north',
-                containerClass: "acme-card-2-mobile acme-card-2-tablet acme-card-2-desktop"
+                contentType: contentType,
+                containerClass: "acme-card-1-mobile acme-card-1-tablet acme-card-1-desktop"
             }) | raw}}
             {% set articleCount = (dev) ? articleCount : articleCount + 1 %}
         </div>
@@ -48,7 +49,7 @@
         imageSize: {width: 285, height: 192, gravity: 'north'},
         gravity: 'north',
         contentType: contentType,
-        cardClass: "acme-col-12 acme-col-md-12 acme-col-lg-6 acme-card-2-mobile acme-card-2-tablet acme-card-2-desktop",
+        cardClass: "acme-col-12 acme-col-md-12 acme-col-lg-4 acme-card-1-mobile acme-card-1-tablet acme-card-1-desktop",
         cardCount: articleCount,
         cardType: "acme-"
     }) | raw}}
